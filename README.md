@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Frimecraft Web is a standalone Next.js frontend application.
+
+It is intentionally separated from frimecraft-admin and consumes read-only public endpoints from admin.
 
 ## Getting Started
 
-First, run the development server:
+1) Copy environment file and adjust API base URL:
+
+```bash
+cp .env.example .env.local
+```
+
+2) Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Required Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- FRIMECRAFT_ADMIN_PUBLIC_API_BASE
+	- Example: http://localhost:3000/api/public
+	- If frimecraft-admin runs on a different port, update this value accordingly.
 
-## Learn More
+## Current Implemented Foundation
 
-To learn more about Next.js, take a look at the following resources:
+- Site shell: layout, navbar, footer
+- SEO metadata generated from public frontend settings endpoint
+- Home page foundation
+- Dedicated profile page at /profile
+- Articles listing page
+- Article detail page
+- Query-based filters and pagination for /articles and /portfolios
+- JSON-LD structured data for article and portfolio detail pages
+- Public API client layer in src/lib/public-api.ts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Public API Contract Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- GET /api/public/frontend-settings
+- GET /api/public/profile-summary
+- GET /api/public/articles?page=1&pageSize=9
+- GET /api/public/articles/:slug
+- GET /api/public/portfolios?featured=true&page=1&pageSize=6
+- GET /api/public/portfolios/:slug
 
-## Deploy on Vercel
+## Migration Roadmap
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Detailed Laravel -> Next.js migration plan is available at:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- docs/MIGRATION_ROADMAP.md
+
+## Notes
+
+- Keep admin and web deployment lifecycle separated.
+- Restrict admin API exposure to public-safe fields only.
