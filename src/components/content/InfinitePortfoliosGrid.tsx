@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { Pagination, PublicPortfolio } from "@/types/public-api";
 import { useInfiniteAutoLoad } from "@/hooks/use-infinite-auto-load";
+import { getDictionary } from "@/lib/i18n";
 
 type InfinitePortfoliosGridProps = {
   initialItems: PublicPortfolio[];
@@ -11,6 +12,7 @@ type InfinitePortfoliosGridProps = {
   q?: string;
   tag?: string;
   featured?: boolean;
+  locale?: "id" | "en";
 };
 
 type PortfoliosPayload = {
@@ -47,7 +49,9 @@ export function InfinitePortfoliosGrid({
   q,
   tag,
   featured,
+  locale,
 }: InfinitePortfoliosGridProps) {
+  const dictionary = getDictionary(locale || "id");
   const [items, setItems] = useState(initialItems);
   const [pagination, setPagination] = useState(initialPagination);
   const { page, setPage, isLoading, setIsLoading, hasMore, triggerRef } = useInfiniteAutoLoad(
@@ -74,6 +78,7 @@ export function InfinitePortfoliosGrid({
         });
         if (q) params.set("q", q);
         if (tag) params.set("tag", tag);
+        if (locale) params.set("lang", locale);
 
         const response = await fetch(`/api/public/portfolios?${params.toString()}`, {
           signal: controller.signal,
@@ -103,11 +108,13 @@ export function InfinitePortfoliosGrid({
 
     run();
     return () => controller.abort();
-  }, [featured, initialPagination.pageSize, isLoading, page, pagination.totalPages, q, setIsLoading, setPage, tag]);
+  }, [featured, initialPagination.pageSize, isLoading, locale, page, pagination.totalPages, q, setIsLoading, setPage, tag]);
 
   const statusText = useMemo(() => {
-    return `Showing ${items.length} of ${pagination.total} portfolios.`;
-  }, [items.length, pagination.total]);
+    return locale === "en"
+      ? `Showing ${items.length} of ${pagination.total} portfolios.`
+      : `Menampilkan ${items.length} dari ${pagination.total} portofolio.`;
+  }, [items.length, locale, pagination.total]);
 
   return (
     <>
@@ -118,24 +125,24 @@ export function InfinitePortfoliosGrid({
               // eslint-disable-next-line @next/next/no-img-element
               <img src={item.imageUrl} alt={item.title} className="h-44 w-full object-cover" />
             ) : (
-              <div className="flex h-44 items-center justify-center bg-black/5 text-sm text-black/45">No preview image</div>
+              <div className="flex h-44 items-center justify-center bg-black/5 text-sm text-black/45">{dictionary.common.noPreviewImage}</div>
             )}
             <div className="p-6">
               <h2 className="text-xl leading-tight font-semibold">{item.title}</h2>
               {item.sortNumber !== null ? (
                 <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-black/45">Sort #{item.sortNumber}</p>
               ) : null}
-              <p className="mt-2 text-sm text-black/60">{(item.workFor?.name || "Client") + " / " + (item.workAt?.name || "Work")}</p>
-              <p className="mt-3 line-clamp-3 text-sm text-black/62">{item.description || "No description."}</p>
+              <p className="mt-2 text-sm text-black/60">{(item.workFor?.name || dictionary.common.client) + " / " + (item.workAt?.name || dictionary.common.work)}</p>
+              <p className="mt-3 line-clamp-3 text-sm text-black/62">{item.description || dictionary.common.noDescription}</p>
               <div className="mt-4 flex flex-wrap gap-3">
                 {item.slug ? (
                   <Link href={`/portfolios/${item.slug}`} className="inline-block text-sm font-semibold text-[color:var(--accent)]">
-                    View details
+                    {dictionary.common.viewDetails}
                   </Link>
                 ) : null}
                 {item.projectUrl ? (
                   <a href={item.projectUrl} target="_blank" rel="noreferrer" className="inline-block text-sm font-semibold text-black/70">
-                    Live project
+                    {dictionary.common.liveProject}
                   </a>
                 ) : null}
               </div>
@@ -154,7 +161,7 @@ export function InfinitePortfoliosGrid({
 
       {items.length === 0 ? (
         <p className="mt-10 rounded-2xl border border-dashed border-black/25 bg-white/60 p-6 text-sm text-black/60">
-          Belum ada portfolio yang dipublish.
+          {locale === "en" ? "No published portfolios yet." : "Belum ada portofolio yang dipublish."}
         </p>
       ) : null}
 
@@ -162,10 +169,10 @@ export function InfinitePortfoliosGrid({
         <p>
           {statusText}
           <span className="ml-2">
-            <Link href="/" className="font-semibold text-[color:var(--accent)]">Back to home</Link>
+            <Link href="/" className="font-semibold text-[color:var(--accent)]">{dictionary.common.backToHome}</Link>
           </span>
         </p>
-        {hasMore ? <p>Scroll down to load more...</p> : <p>All portfolios loaded.</p>}
+        {hasMore ? <p>{locale === "en" ? "Scroll down to load more..." : "Scroll ke bawah untuk memuat lagi..."}</p> : <p>{locale === "en" ? "All portfolios loaded." : "Semua portofolio sudah dimuat."}</p>}
       </footer>
 
       {hasMore ? <div ref={triggerRef} className="h-10" /> : null}

@@ -6,6 +6,17 @@ export type FrontendSettings = {
   seoKeywords: string | null;
   canonicalUrl: string | null;
   ogImageUrl: string | null;
+  ogImageAlt: string | null;
+  organizationName: string | null;
+  organizationLogoUrl: string | null;
+  defaultAuthorName: string | null;
+  defaultLocale: string | null;
+  twitterHandle: string | null;
+  socialProfileUrls: string | null;
+  clarityProjectId: string | null;
+  googleSiteVerification: string | null;
+  bingSiteVerification: string | null;
+  themeColor: string | null;
   footerText: string | null;
   updatedAt: string;
 };

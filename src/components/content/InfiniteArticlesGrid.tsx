@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { Pagination, PublicArticleListItem } from "@/types/public-api";
 import { useInfiniteAutoLoad } from "@/hooks/use-infinite-auto-load";
+import { getDictionary } from "@/lib/i18n";
 
 type InfiniteArticlesGridProps = {
   initialItems: PublicArticleListItem[];
   initialPagination: Pagination;
   q?: string;
   tag?: string;
+  locale?: "id" | "en";
 };
 
 type ArticlesPayload = {
@@ -37,7 +39,9 @@ export function InfiniteArticlesGrid({
   initialPagination,
   q,
   tag,
+  locale,
 }: InfiniteArticlesGridProps) {
+  const dictionary = getDictionary(locale || "id");
   const [items, setItems] = useState(initialItems);
   const [pagination, setPagination] = useState(initialPagination);
   const { page, setPage, isLoading, setIsLoading, hasMore, triggerRef } = useInfiniteAutoLoad(
@@ -63,6 +67,7 @@ export function InfiniteArticlesGrid({
         });
         if (q) params.set("q", q);
         if (tag) params.set("tag", tag);
+        if (locale) params.set("lang", locale);
 
         const response = await fetch(`/api/public/articles?${params.toString()}`, {
           signal: controller.signal,
@@ -88,11 +93,13 @@ export function InfiniteArticlesGrid({
 
     run();
     return () => controller.abort();
-  }, [initialPagination.pageSize, isLoading, page, pagination.totalPages, q, setIsLoading, setPage, tag]);
+  }, [initialPagination.pageSize, isLoading, locale, page, pagination.totalPages, q, setIsLoading, setPage, tag]);
 
   const statusText = useMemo(() => {
-    return `Showing ${items.length} of ${pagination.total} articles.`;
-  }, [items.length, pagination.total]);
+    return locale === "en"
+      ? `Showing ${items.length} of ${pagination.total} articles.`
+      : `Menampilkan ${items.length} dari ${pagination.total} artikel.`;
+  }, [items.length, locale, pagination.total]);
 
   return (
     <>
@@ -110,9 +117,9 @@ export function InfiniteArticlesGrid({
             {article.sortNumber !== null ? (
               <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-black/45">Sort #{article.sortNumber}</p>
             ) : null}
-            <p className="mt-2 line-clamp-3 text-sm text-black/60">{article.excerpt || "No excerpt."}</p>
+            <p className="mt-2 line-clamp-3 text-sm text-black/60">{article.excerpt || dictionary.common.noExcerpt}</p>
             <Link href={`/articles/${article.slug}`} className="mt-5 inline-block text-sm font-semibold text-[color:var(--accent)]">
-              Read article
+              {locale === "en" ? "Read article" : "Baca artikel"}
             </Link>
           </article>
         ))}
@@ -128,7 +135,7 @@ export function InfiniteArticlesGrid({
 
       <div className="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-black/50">
         <p>{statusText}</p>
-        {hasMore ? <p>Scroll down to load more...</p> : <p>All articles loaded.</p>}
+        {hasMore ? <p>{locale === "en" ? "Scroll down to load more..." : "Scroll ke bawah untuk memuat lagi..."}</p> : <p>{locale === "en" ? "All articles loaded." : "Semua artikel sudah dimuat."}</p>}
       </div>
 
       {hasMore ? <div ref={triggerRef} className="h-10" /> : null}

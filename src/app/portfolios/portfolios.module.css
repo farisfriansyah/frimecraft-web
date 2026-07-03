@@ -1,0 +1,13 @@
+.pageRoot {
+  width: 100%;
+}
+
+.filterForm {
+  grid-template-columns: 1fr 200px 180px auto;
+}
+
+@media (max-width: 768px) {
+  .filterForm {
+    grid-template-columns: 1fr;
+  }
+}

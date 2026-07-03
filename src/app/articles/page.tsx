@@ -1,17 +1,39 @@
 import type { Metadata } from "next";
 import { getFrontendSettings, getPublicArticlesWithFilters } from "@/lib/public-api";
+import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { buildSeoMetadata } from "@/lib/seo";
 import { InfiniteArticlesGrid } from "@/components/content/InfiniteArticlesGrid";
 import type { Pagination, PublicArticleListItem } from "@/types/public-api";
+import { ArticlesFilterForm } from "./sections/ArticlesFilterForm";
+import { ArticlesPageHeader } from "./sections/ArticlesPageHeader";
+import styles from "./articles.module.css";
 
 export const revalidate = 90;
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: ArticlesPageProps): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);
+  const locale = await getRequestLocale(settings);
+  const dictionary = getDictionary(locale);
+  const resolvedSearchParams = await searchParams;
+  const q = (resolvedSearchParams.q || "").trim();
+  const tag = (resolvedSearchParams.tag || "").trim();
+  const page = parsePage(resolvedSearchParams.page);
+  const hasFilters = Boolean(q || tag || page > 1);
+  const title = hasFilters ? `${dictionary.articlesPage.filteredTitle}${q ? `: ${q}` : ""}` : dictionary.articlesPage.title;
+  const description = hasFilters
+    ? `Filtered article results${q ? ` for ${q}` : ""}${tag ? ` with tag ${tag}` : ""}.`
+    : settings?.siteDescription || (locale === "id" ? "Insight, catatan, dan update dari Frimecraft." : "Insight, notes, and updates from Frimecraft.");
 
-  return {
-    title: `Articles | ${settings?.siteTitle || "Frimecraft"}`,
-    description: settings?.siteDescription || "Insight, notes, and updates from Frimecraft.",
-  };
+  return buildSeoMetadata({
+    settings,
+    path: withLocalePath(locale, "/articles"),
+    title,
+    description,
+    keywords: settings?.seoKeywords,
+    image: settings?.ogImageUrl,
+    type: "website",
+    noIndex: hasFilters,
+  });
 }
 
 type ArticlesPageProps = {
@@ -49,37 +71,15 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
     pageSize: 9,
     q: q || undefined,
     tag: tag || undefined,
+    locale,
   }).catch(() => fallback);
+  
+  const dictionary = getDictionary(locale);
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-16">
-      <header className="mb-10">
-        <p className="text-sm uppercase tracking-[0.2em] text-black/55">Journal</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight">Latest Articles</h1>
-      </header>
-
-      <form className="mb-8 grid gap-3 rounded-2xl border border-black/10 bg-white/75 p-4 md:grid-cols-[1fr_220px_auto]">
-        <input
-          type="text"
-          name="q"
-          defaultValue={q}
-          placeholder="Search article title/content"
-          className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
-        />
-        <input
-          type="text"
-          name="tag"
-          defaultValue={tag}
-          placeholder="Filter tag"
-          className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
-        />
-        <button
-          type="submit"
-          className="rounded-xl bg-black px-4 py-2.5 text-sm font-semibold text-white"
-        >
-          Apply
-        </button>
-      </form>
+    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-16`}>
+      <ArticlesPageHeader dictionary={dictionary} />
+      <ArticlesFilterForm q={q} tag={tag} dictionary={dictionary} />
 
       <InfiniteArticlesGrid
         key={`articles:${page}:${q}:${tag}`}
@@ -87,6 +87,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
         initialPagination={pagination}
         q={q || undefined}
         tag={tag || undefined}
+        locale={locale}
       />
     </main>
   );

@@ -1,0 +1,13 @@
+.pageRoot {
+  width: 100%;
+}
+
+.contentGrid {
+  grid-template-columns: 240px 1fr;
+}
+
+@media (max-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

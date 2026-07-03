@@ -57,6 +57,7 @@ export async function getPublicArticlesWithFilters(options?: {
   pageSize?: number;
   q?: string;
   tag?: string;
+  locale?: "id" | "en";
 }): Promise<{
   items: PublicArticleListItem[];
   pagination: Pagination;
@@ -70,6 +71,7 @@ export async function getPublicArticlesWithFilters(options?: {
 
   if (options?.q) params.set("q", options.q);
   if (options?.tag) params.set("tag", options.tag);
+  if (options?.locale) params.set("lang", options.locale);
 
   const response = await fetch(
     `${getPublicApiBaseUrl()}/articles?${params.toString()}`,
@@ -101,8 +103,9 @@ export async function getPublicArticlesWithFilters(options?: {
   };
 }
 
-export async function getPublicArticleBySlug(slug: string): Promise<PublicArticleDetail> {
-  const data = await requestJson<PublicArticleDetail>(`/articles/${slug}`, 60);
+export async function getPublicArticleBySlug(slug: string, locale?: "id" | "en"): Promise<PublicArticleDetail> {
+  const query = locale ? `?lang=${locale}` : "";
+  const data = await requestJson<PublicArticleDetail>(`/articles/${slug}${query}`, 60);
   return {
     ...data,
     featuredImage: normalizeImageUrl(data.featuredImage),
@@ -122,6 +125,7 @@ export async function getPublicPortfoliosWithFilters(options?: {
   pageSize?: number;
   q?: string;
   tag?: string;
+  locale?: "id" | "en";
 }): Promise<{
   items: PublicPortfolio[];
   pagination: Pagination;
@@ -137,6 +141,7 @@ export async function getPublicPortfoliosWithFilters(options?: {
 
   if (options?.q) params.set("q", options.q);
   if (options?.tag) params.set("tag", options.tag);
+  if (options?.locale) params.set("lang", options.locale);
 
   const response = await fetch(
     `${getPublicApiBaseUrl()}/portfolios?${params.toString()}`,
@@ -168,14 +173,46 @@ export async function getPublicPortfoliosWithFilters(options?: {
   };
 }
 
-export async function getPublicProfileSummary(): Promise<PublicProfileSummary> {
-  return requestJson<PublicProfileSummary>("/profile-summary", 120);
+export async function getPublicProfileSummary(locale?: "id" | "en"): Promise<PublicProfileSummary> {
+  const query = locale ? `?lang=${locale}` : "";
+  return requestJson<PublicProfileSummary>(`/profile-summary${query}`, 120);
 }
 
-export async function getPublicPortfolioBySlug(slug: string): Promise<PublicPortfolioDetail> {
-  const data = await requestJson<PublicPortfolioDetail>(`/portfolios/${slug}`, 120);
+export async function getPublicPortfolioBySlug(slug: string, locale?: "id" | "en"): Promise<PublicPortfolioDetail> {
+  const query = locale ? `?lang=${locale}` : "";
+  const data = await requestJson<PublicPortfolioDetail>(`/portfolios/${slug}${query}`, 120);
   return {
     ...data,
     imageUrl: normalizeImageUrl(data.imageUrl),
   };
+}
+
+export async function getAllPublicArticlesForSitemap(): Promise<PublicArticleListItem[]> {
+  const items: PublicArticleListItem[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  do {
+    const result = await getPublicArticles(page, 30);
+    items.push(...result.items);
+    totalPages = result.pagination.totalPages;
+    page += 1;
+  } while (page <= totalPages);
+
+  return items;
+}
+
+export async function getAllPublicPortfoliosForSitemap(): Promise<PublicPortfolio[]> {
+  const items: PublicPortfolio[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  do {
+    const result = await getPublicPortfolios(false, page, 30);
+    items.push(...result.items);
+    totalPages = result.pagination.totalPages;
+    page += 1;
+  } while (page <= totalPages);
+
+  return items;
 }

@@ -1,18 +1,40 @@
 import type { Metadata } from "next";
 import { getFrontendSettings, getPublicPortfoliosWithFilters } from "@/lib/public-api";
+import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { buildSeoMetadata } from "@/lib/seo";
 import { InfinitePortfoliosGrid } from "@/components/content/InfinitePortfoliosGrid";
 import type { Pagination, PublicPortfolio } from "@/types/public-api";
+import { PortfoliosFilterForm } from "./sections/PortfoliosFilterForm";
+import { PortfoliosPageHeader } from "./sections/PortfoliosPageHeader";
+import styles from "./portfolios.module.css";
 
 export const revalidate = 120;
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: PortfoliosPageProps): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);
+  const locale = await getRequestLocale(settings);
+  const dictionary = getDictionary(locale);
+  const resolvedSearchParams = await searchParams;
+  const q = (resolvedSearchParams.q || "").trim();
+  const tag = (resolvedSearchParams.tag || "").trim();
+  const featured = parseFeatured(resolvedSearchParams.featured);
+  const page = parsePage(resolvedSearchParams.page);
+  const hasFilters = Boolean(q || tag || featured || page > 1);
+  const title = hasFilters ? `${dictionary.portfoliosPage.filteredTitle}${q ? `: ${q}` : ""}` : dictionary.portfoliosPage.title;
+  const description = hasFilters
+    ? `Filtered portfolio results${q ? ` for ${q}` : ""}${tag ? ` with tag ${tag}` : ""}${featured ? ` in featured projects` : ""}.`
+    : settings?.siteDescription || (locale === "id" ? "Pilihan karya portofolio dari Frimecraft." : "Selected portfolio projects from Frimecraft.");
 
-  return {
-    title: `Portfolios | ${settings?.siteTitle || "Frimecraft"}`,
-    description:
-      settings?.siteDescription || "Selected portfolio projects from Frimecraft.",
-  };
+  return buildSeoMetadata({
+    settings,
+    path: withLocalePath(locale, "/portfolios"),
+    title,
+    description,
+    keywords: settings?.seoKeywords,
+    image: settings?.ogImageUrl,
+    type: "website",
+    noIndex: hasFilters,
+  });
 }
 
 type PortfoliosPageProps = {
@@ -58,45 +80,15 @@ export default async function PortfoliosPage({ searchParams }: PortfoliosPagePro
     pageSize: 12,
     q: q || undefined,
     tag: tag || undefined,
+    locale,
   }).catch(() => fallback);
 
-  return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-16">
-      <header className="mb-10">
-        <p className="text-sm uppercase tracking-[0.2em] text-black/55">Portfolio</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight">Project Works</h1>
-      </header>
+  const dictionary = getDictionary(locale);
 
-      <form className="mb-8 grid gap-3 rounded-2xl border border-black/10 bg-white/75 p-4 md:grid-cols-[1fr_200px_180px_auto]">
-        <input
-          type="text"
-          name="q"
-          defaultValue={q}
-          placeholder="Search portfolio"
-          className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
-        />
-        <input
-          type="text"
-          name="tag"
-          defaultValue={tag}
-          placeholder="Filter tag"
-          className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
-        />
-        <select
-          name="featured"
-          defaultValue={String(featured)}
-          className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
-        >
-          <option value="false">All portfolios</option>
-          <option value="true">Featured only</option>
-        </select>
-        <button
-          type="submit"
-          className="rounded-xl bg-black px-4 py-2.5 text-sm font-semibold text-white"
-        >
-          Apply
-        </button>
-      </form>
+  return (
+    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-16`}>
+      <PortfoliosPageHeader dictionary={dictionary} />
+      <PortfoliosFilterForm q={q} tag={tag} featured={featured} dictionary={dictionary} />
 
       <InfinitePortfoliosGrid
         key={`portfolios:${page}:${q}:${tag}:${featured}`}
@@ -105,6 +97,7 @@ export default async function PortfoliosPage({ searchParams }: PortfoliosPagePro
         q={q || undefined}
         tag={tag || undefined}
         featured={featured}
+        locale={locale}
       />
     </main>
   );

@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublicArticleBySlug, getFrontendSettings } from "@/lib/public-api";
+import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { buildDetailOpenGraph, buildSeoMetadata } from "@/lib/seo";
+import { buildArticleStructuredData } from "@/lib/structured-data";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
+import { ArticleContent } from "./sections/ArticleContent";
+import { ArticleHero } from "./sections/ArticleHero";
+import { ArticleMeta } from "./sections/ArticleMeta";
+import styles from "./article-detail.module.css";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -13,26 +21,40 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     params,
     getFrontendSettings().catch(() => null),
   ]);
+  const locale = await getRequestLocale(settings);
+  const dictionary = getDictionary(locale);
 
   try {
-    const article = await getPublicArticleBySlug(slug);
+    const article = await getPublicArticleBySlug(slug, locale);
 
     return {
-      title: article.seoTitle || article.title,
-      description:
-        article.seoDescription ||
-        article.excerpt ||
-        settings?.seoDescription ||
-        "Frimecraft article",
-      openGraph: {
+      ...buildSeoMetadata({
+        settings,
+        path: withLocalePath(locale, `/articles/${article.slug}`),
+        title: article.seoTitle || article.title,
+        description:
+          article.seoDescription ||
+          article.excerpt ||
+          settings?.seoDescription ||
+          (locale === "id" ? "Artikel Frimecraft" : "Frimecraft article"),
+        keywords: article.keywords || article.tags,
+        image: article.featuredImage,
+        type: "article",
+      }),
+      openGraph: buildDetailOpenGraph({
+        settings,
+        path: withLocalePath(locale, `/articles/${article.slug}`),
         title: article.seoTitle || article.title,
         description: article.seoDescription || article.excerpt || undefined,
-        images: article.featuredImage ? [article.featuredImage] : undefined,
-      },
+        image: article.featuredImage,
+        type: "article",
+        publishedTime: article.createdAt,
+        modifiedTime: article.updatedAt,
+      }),
     };
   } catch {
     return {
-      title: `Article | ${settings?.siteTitle || "Frimecraft"}`,
+      title: dictionary.articleDetail.fallbackTitle,
     };
   }
 }
@@ -41,61 +63,22 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
   let article;
+  const settings = await getFrontendSettings().catch(() => null);
+  const locale = await getRequestLocale(settings);
   try {
-    article = await getPublicArticleBySlug(slug);
+    article = await getPublicArticleBySlug(slug, locale);
   } catch {
     notFound();
   }
 
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.seoTitle || article.title,
-    description: article.seoDescription || article.excerpt || undefined,
-    datePublished: article.createdAt,
-    dateModified: article.updatedAt,
-    image: article.featuredImage || undefined,
-    author: {
-      "@type": "Person",
-      name: "Faris Friansyah",
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `/articles/${article.slug}`,
-    },
-  };
+  const articleJsonLd = buildArticleStructuredData(article, settings);
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-6 py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c"),
-        }}
-      />
-      <p className="text-xs uppercase tracking-[0.18em] text-black/50">
-        {new Date(article.createdAt).toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}
-      </p>
-      <h1 className="mt-3 text-4xl leading-tight font-semibold tracking-tight">{article.title}</h1>
-      {article.excerpt ? <p className="mt-4 text-lg text-black/65">{article.excerpt}</p> : null}
-
-      {article.featuredImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={article.featuredImage}
-          alt={article.title}
-          className="mt-8 h-auto w-full rounded-2xl border border-black/10 object-cover"
-        />
-      ) : null}
-
-      <article
-        className="prose prose-zinc mt-10 max-w-none"
-        dangerouslySetInnerHTML={{ __html: article.content }}
-      />
+    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-3xl flex-1 flex-col px-6 py-16`}>
+      <JsonLdScript data={articleJsonLd} />
+      <ArticleMeta createdAt={article.createdAt} locale={locale} />
+      <ArticleHero title={article.title} excerpt={article.excerpt} featuredImage={article.featuredImage} />
+      <ArticleContent content={article.content} />
     </main>
   );
 }
