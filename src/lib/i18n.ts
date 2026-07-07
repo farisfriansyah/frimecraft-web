@@ -1,6 +1,3 @@
-import { cookies, headers } from "next/headers";
-import type { FrontendSettings } from "@/types/public-api";
-
 export const LOCALE_COOKIE_NAME = "frimecraft_locale";
 export const LOCALE_HEADER_NAME = "x-frimecraft-locale";
 export const SUPPORTED_LOCALES = ["id", "en"] as const;
@@ -325,16 +322,6 @@ export function withLocalePath(locale: AppLocale, path: string) {
   if (path.startsWith(`#`)) return `/${locale}/${path}`;
   if (path === "/") return `/${locale}`;
   return `/${locale}${path.startsWith("/") ? path : `/${path}`}`;
-}
-
-export async function getRequestLocale(settings?: FrontendSettings | null): Promise<AppLocale> {
-  const requestHeaders = await headers();
-  const headerValue = requestHeaders.get(LOCALE_HEADER_NAME);
-  if (headerValue) return normalizeLocale(headerValue);
-
-  const store = await cookies();
-  const cookieValue = store.get(LOCALE_COOKIE_NAME)?.value;
-  return normalizeLocale(cookieValue || settings?.defaultLocale || "id");
 }
 
 export function getDictionary(locale: AppLocale): AppDictionary {

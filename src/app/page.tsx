@@ -4,7 +4,8 @@ import {
   getPublicProfileSummary,
   getPublicPortfoliosWithFilters,
 } from "@/lib/public-api";
-import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { getDictionary, withLocalePath } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/i18n.server";
 import { buildAbsoluteUrl, buildSeoMetadata, getOrganizationName, getSocialProfileUrls } from "@/lib/seo";
 import type { Metadata } from "next";
 import { AboutSection } from "./home/sections/AboutSection";
@@ -20,6 +21,7 @@ export const revalidate = 90;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);
+  const locale = await getRequestLocale(settings);
 
   const metadata = buildSeoMetadata({
     settings,

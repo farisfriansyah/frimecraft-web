@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublicArticleBySlug, getFrontendSettings } from "@/lib/public-api";
-import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { getDictionary, withLocalePath } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/i18n.server";
 import { buildDetailOpenGraph, buildSeoMetadata } from "@/lib/seo";
 import { buildArticleStructuredData } from "@/lib/structured-data";
 import { JsonLdScript } from "@/components/seo/JsonLdScript";

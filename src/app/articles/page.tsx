@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getFrontendSettings, getPublicArticlesWithFilters } from "@/lib/public-api";
-import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { getDictionary, withLocalePath } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/i18n.server";
 import { buildSeoMetadata } from "@/lib/seo";
 import { InfiniteArticlesGrid } from "@/components/content/InfiniteArticlesGrid";
 import type { Pagination, PublicArticleListItem } from "@/types/public-api";
@@ -51,6 +52,8 @@ function parsePage(page?: string) {
 }
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
+  const settings = await getFrontendSettings().catch(() => null);
+  const locale = await getRequestLocale(settings);
   const resolvedSearchParams = await searchParams;
   const page = parsePage(resolvedSearchParams.page);
   const q = (resolvedSearchParams.q || "").trim();

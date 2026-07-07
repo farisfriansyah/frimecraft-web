@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getFrontendSettings, getPublicProfileSummary } from "@/lib/public-api";
-import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { getDictionary, withLocalePath } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/i18n.server";
 import { buildAbsoluteUrl, buildSeoMetadata, getOrganizationName, getSocialProfileUrls } from "@/lib/seo";
 import { ProfileScrollspyNav } from "@/components/profile/ProfileScrollspyNav";
 import { ProfileInfiniteSections } from "@/components/profile/ProfileInfiniteSections";

@@ -6,7 +6,8 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { getFrontendSettings } from "@/lib/public-api";
 import { buildSeoMetadata, buildAbsoluteUrl } from "@/lib/seo";
-import { getDictionary, getRequestLocale } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/i18n.server";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",

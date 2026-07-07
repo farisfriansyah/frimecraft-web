@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { LOCALE_COOKIE_NAME, LOCALE_HEADER_NAME, normalizeLocale } from "@/lib/i18n";
+import { LOCALE_COOKIE_NAME, LOCALE_HEADER_NAME, normalizeLocale, SUPPORTED_LOCALES } from "@/lib/i18n";
 
 const PUBLIC_FILE = /\.(.*)$/;
 
@@ -25,9 +25,9 @@ export function middleware(request: NextRequest) {
   }
 
   const segments = pathname.split("/").filter(Boolean);
-  const maybeLocale = segments[0];
+  const maybeLocale = segments[0]?.toLowerCase();
 
-  if (maybeLocale === "id" || maybeLocale === "en") {
+  if (maybeLocale && (SUPPORTED_LOCALES as readonly string[]).includes(maybeLocale)) {
     const locale = normalizeLocale(maybeLocale);
     const rewriteUrl = request.nextUrl.clone();
     const strippedPath = `/${segments.slice(1).join("/")}`.replace(/\/$/, "") || "/";

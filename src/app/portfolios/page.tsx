@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getFrontendSettings, getPublicPortfoliosWithFilters } from "@/lib/public-api";
-import { getDictionary, getRequestLocale, withLocalePath } from "@/lib/i18n";
+import { getDictionary, withLocalePath } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/i18n.server";
 import { buildSeoMetadata } from "@/lib/seo";
 import { InfinitePortfoliosGrid } from "@/components/content/InfinitePortfoliosGrid";
 import type { Pagination, PublicPortfolio } from "@/types/public-api";
@@ -58,6 +59,8 @@ function parseFeatured(value?: string) {
 }
 
 export default async function PortfoliosPage({ searchParams }: PortfoliosPageProps) {
+  const settings = await getFrontendSettings().catch(() => null);
+  const locale = await getRequestLocale(settings);
   const resolvedSearchParams = await searchParams;
   const page = parsePage(resolvedSearchParams.page);
   const q = (resolvedSearchParams.q || "").trim();
