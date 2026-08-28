@@ -9,7 +9,7 @@ import { PortfoliosFilterForm } from "./sections/PortfoliosFilterForm";
 import { PortfoliosPageHeader } from "./sections/PortfoliosPageHeader";
 import styles from "./portfolios.module.css";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ searchParams }: PortfoliosPageProps): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);

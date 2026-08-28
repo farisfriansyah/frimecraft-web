@@ -9,7 +9,7 @@ import { ArticlesFilterForm } from "./sections/ArticlesFilterForm";
 import { ArticlesPageHeader } from "./sections/ArticlesPageHeader";
 import styles from "./articles.module.css";
 
-export const revalidate = 90;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ searchParams }: ArticlesPageProps): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);

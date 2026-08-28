@@ -319,9 +319,17 @@ export function normalizeLocale(value?: string | null): AppLocale {
 
 export function withLocalePath(locale: AppLocale, path: string) {
   if (/^(https?:|mailto:|tel:)/.test(path)) return path;
-  if (path.startsWith(`#`)) return `/${locale}/${path}`;
-  if (path === "/") return `/${locale}`;
-  return `/${locale}${path.startsWith("/") ? path : `/${path}`}`;
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const [withoutHash, hash = ""] = normalizedPath.split("#");
+  const [pathnamePart, queryPart = ""] = withoutHash.split("?");
+
+  const withoutLocalePrefix = pathnamePart.replace(/^\/(?:id|en)(?=\/|$)/, "") || "/";
+  let result = `/${locale}${withoutLocalePrefix === "/" ? "" : withoutLocalePrefix}`;
+  if (queryPart) result += `?${queryPart}`;
+  if (hash) result += `#${hash}`;
+
+  return result;
 }
 
 export function getDictionary(locale: AppLocale): AppDictionary {

@@ -15,13 +15,13 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { href: withLocalePath(locale, "/#rl-hero"), label: dictionary.common.home },
-    { href: withLocalePath(locale, "/#rl-about"), label: dictionary.common.about },
-    { href: withLocalePath(locale, "/#rl-services"), label: dictionary.common.services },
+    { href: withLocalePath(locale, "/"), label: dictionary.common.home },
+    { href: withLocalePath(locale, "/profile"), label: dictionary.common.about },
+    { href: withLocalePath(locale, "/profile"), label: dictionary.common.services },
     { href: withLocalePath(locale, "/profile"), label: dictionary.common.profile },
-    { href: withLocalePath(locale, "/#rl-portfolio"), label: dictionary.common.portfolio },
+    { href: withLocalePath(locale, "/portfolios"), label: dictionary.common.portfolio },
     { href: withLocalePath(locale, "/articles"), label: dictionary.common.articles },
-    { href: withLocalePath(locale, "/#rl-hireme"), label: dictionary.common.hireMe },
+    { href: withLocalePath(locale, "/profile"), label: dictionary.common.hireMe },
   ];
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
         <div className="hidden items-center gap-4 md:flex">
           <nav className="items-center gap-6 text-sm font-medium md:flex">
             {links.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-[color:var(--accent)] transition-colors">
+              <Link key={`${link.label}-${link.href}`} href={link.href} className="hover:text-[color:var(--accent)] transition-colors">
                 {link.label}
               </Link>
             ))}
@@ -85,7 +85,7 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
             <nav className="flex flex-col gap-1 px-4 py-4 text-sm font-medium">
               {links.map((link) => (
                 <Link
-                  key={link.href}
+                  key={`${link.label}-${link.href}`}
                   href={link.href}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-2.5 hover:bg-black/5"

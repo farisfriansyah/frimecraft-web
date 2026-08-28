@@ -27,8 +27,8 @@ export function HeroSection({ siteDescription, dictionary, locale }: HeroSection
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-2 md:justify-start">
-              <CtaButtonLink href={withLocalePath(locale, "/#rl-portfolio")} size="lg">{dictionary.homePage.seeMyPortfolios}</CtaButtonLink>
-              <CtaButtonLink href={withLocalePath(locale, "/#rl-hireme")} size="lg">{dictionary.homePage.downloadProposal}</CtaButtonLink>
+              <CtaButtonLink href={withLocalePath(locale, "/portfolios")} size="lg">{dictionary.homePage.seeMyPortfolios}</CtaButtonLink>
+              <CtaButtonLink href={withLocalePath(locale, "/profile")} size="lg">{dictionary.homePage.downloadProposal}</CtaButtonLink>
             </div>
           </div>
 

@@ -12,7 +12,12 @@ type LocaleSwitcherProps = {
 export function LocaleSwitcher({ locale, label, indonesianLabel, englishLabel }: LocaleSwitcherProps) {
   const handleChange = (nextLocale: AppLocale) => {
     document.cookie = `${LOCALE_COOKIE_NAME}=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
-    window.location.reload();
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("lang");
+    const strippedPath = url.pathname.replace(/^\/(?:id|en)(?=\/|$)/, "") || "/";
+    const nextPath = `/${nextLocale}${strippedPath === "/" ? "" : strippedPath}`;
+    window.location.assign(`${nextPath}${url.search}${url.hash}`);
   };
 
   return (

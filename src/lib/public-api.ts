@@ -20,9 +20,9 @@ function normalizeImageUrl(value: string | null): string | null {
   return `${getPublicApiBaseUrl().replace(/\/api\/public$/, "")}${value.startsWith("/") ? value : `/${value}`}`;
 }
 
-async function requestJson<T>(path: string, revalidateSeconds = 120): Promise<T> {
+async function requestJson<T>(path: string, _revalidateSeconds?: number): Promise<T> {
   const response = await fetch(`${getPublicApiBaseUrl()}${path}`, {
-    next: { revalidate: revalidateSeconds },
+    cache: "no-store",
     headers: {
       Accept: "application/json",
     },
@@ -41,7 +41,7 @@ async function requestJson<T>(path: string, revalidateSeconds = 120): Promise<T>
 }
 
 export async function getFrontendSettings(): Promise<FrontendSettings | null> {
-  const data = await requestJson<FrontendSettings | null>("/frontend-settings", 90);
+  const data = await requestJson<FrontendSettings | null>("/frontend-settings");
   return data;
 }
 
@@ -76,7 +76,7 @@ export async function getPublicArticlesWithFilters(options?: {
   const response = await fetch(
     `${getPublicApiBaseUrl()}/articles?${params.toString()}`,
     {
-      next: { revalidate: 90 },
+      cache: "no-store",
       headers: { Accept: "application/json" },
     },
   );
@@ -105,7 +105,7 @@ export async function getPublicArticlesWithFilters(options?: {
 
 export async function getPublicArticleBySlug(slug: string, locale?: "id" | "en"): Promise<PublicArticleDetail> {
   const query = locale ? `?lang=${locale}` : "";
-  const data = await requestJson<PublicArticleDetail>(`/articles/${slug}${query}`, 60);
+  const data = await requestJson<PublicArticleDetail>(`/articles/${slug}${query}`);
   return {
     ...data,
     featuredImage: normalizeImageUrl(data.featuredImage),
@@ -146,7 +146,7 @@ export async function getPublicPortfoliosWithFilters(options?: {
   const response = await fetch(
     `${getPublicApiBaseUrl()}/portfolios?${params.toString()}`,
     {
-      next: { revalidate: 120 },
+      cache: "no-store",
       headers: { Accept: "application/json" },
     },
   );
@@ -175,12 +175,12 @@ export async function getPublicPortfoliosWithFilters(options?: {
 
 export async function getPublicProfileSummary(locale?: "id" | "en"): Promise<PublicProfileSummary> {
   const query = locale ? `?lang=${locale}` : "";
-  return requestJson<PublicProfileSummary>(`/profile-summary${query}`, 120);
+  return requestJson<PublicProfileSummary>(`/profile-summary${query}`);
 }
 
 export async function getPublicPortfolioBySlug(slug: string, locale?: "id" | "en"): Promise<PublicPortfolioDetail> {
   const query = locale ? `?lang=${locale}` : "";
-  const data = await requestJson<PublicPortfolioDetail>(`/portfolios/${slug}${query}`, 120);
+  const data = await requestJson<PublicPortfolioDetail>(`/portfolios/${slug}${query}`);
   return {
     ...data,
     imageUrl: normalizeImageUrl(data.imageUrl),

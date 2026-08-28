@@ -17,7 +17,7 @@ import { ProfileSection } from "./home/sections/ProfileSection";
 import { ServicesSection } from "./home/sections/ServicesSection";
 import styles from "./home/home.module.css";
 
-export const revalidate = 90;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);

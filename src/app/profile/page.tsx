@@ -10,7 +10,7 @@ import { ProfileEmptyState } from "./sections/ProfileEmptyState";
 import { ProfilePageHeader } from "./sections/ProfilePageHeader";
 import styles from "./profile.module.css";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getFrontendSettings().catch(() => null);
@@ -78,7 +78,7 @@ export default async function ProfilePage() {
           }}
         />
       ) : null}
-      <ProfilePageHeader profile={profile} dictionary={dictionary} />
+      <ProfilePageHeader profile={profile} dictionary={dictionary} locale={locale} />
 
       <section className={`${styles.contentGrid} grid gap-6`}>
         <aside className="h-max rounded-2xl border border-black/10 bg-[color:var(--paper)] p-4 lg:sticky lg:top-20">
