@@ -69,7 +69,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-16`}>
+    <main className={`${styles.pageRoot} mx-auto flex w-full flex-1 flex-col`}>
       {personJsonLd ? (
         <script
           type="application/ld+json"
@@ -80,7 +80,7 @@ export default async function ProfilePage() {
       ) : null}
       <ProfilePageHeader profile={profile} dictionary={dictionary} locale={locale} />
 
-      <section className={`${styles.contentGrid} grid gap-6`}>
+      <section className={`${styles.contentGrid} grid max-w-6xl px-6 py-16 gap-6`}>
         <aside className="h-max rounded-2xl border border-black/10 bg-[color:var(--paper)] p-4 lg:sticky lg:top-20">
           <ProfileScrollspyNav items={profileNavItems} />
         </aside>

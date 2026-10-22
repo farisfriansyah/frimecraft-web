@@ -80,7 +80,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
   const dictionary = getDictionary(locale);
 
   return (
-    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-16`}>
+    <main className={`${styles.pageRoot} mx-auto flex w-full flex-1 flex-col`}>
       <ArticlesPageHeader dictionary={dictionary} />
       <ArticlesFilterForm q={q} tag={tag} dictionary={dictionary} />
 

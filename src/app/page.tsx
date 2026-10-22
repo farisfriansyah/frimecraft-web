@@ -135,7 +135,7 @@ export default async function Home() {
     : null;
 
   return (
-    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-14 lg:py-20`}>
+    <main className={`${styles.pageRoot} mx-auto flex w-full flex-1 flex-col`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

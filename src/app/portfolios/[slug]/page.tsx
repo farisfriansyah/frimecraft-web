@@ -71,7 +71,7 @@ export default async function PortfolioDetailPage({ params }: PageProps) {
   const portfolioJsonLd = buildPortfolioStructuredData(portfolio, slug, settings);
 
   return (
-    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-16`}>
+    <main className={`${styles.pageRoot} mx-auto flex w-full flex-1 flex-col`}>
       <JsonLdScript data={portfolioJsonLd} />
       <PortfolioBackLink dictionary={dictionary} />
       <PortfolioHero

@@ -75,7 +75,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   const articleJsonLd = buildArticleStructuredData(article, settings);
 
   return (
-    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-3xl flex-1 flex-col px-6 py-16`}>
+    <main className={`${styles.pageRoot} mx-auto flex w-full flex-1 flex-col`}>
       <JsonLdScript data={articleJsonLd} />
       <ArticleMeta createdAt={article.createdAt} locale={locale} />
       <ArticleHero title={article.title} excerpt={article.excerpt} featuredImage={article.featuredImage} />
