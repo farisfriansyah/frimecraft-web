@@ -4,33 +4,161 @@
 
 .heroSection {
   position: relative;
-  min-height: 88vh;
-  background-image: url('/assets/img/main/bg.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  min-height: min(820px, calc(100vh - 68px));
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 82% 30%, rgba(121, 134, 255, 0.2), transparent 36%),
+    radial-gradient(ellipse at 6% 82%, rgba(115, 193, 255, 0.13), transparent 32%),
+    linear-gradient(135deg, #fbfcff 0%, #f4f5ff 54%, #f8fbff 100%);
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.8);
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(83, 91, 145, 0.14) 0.7px, transparent 0.7px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(90deg, transparent, black 62%, transparent);
 }
 
 .heroContent {
   position: relative;
+  min-height: inherit;
+}
+
+.heroCopy {
+  max-width: 580px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(91, 92, 240, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 0.45rem 0.8rem;
+  color: #5555c7;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.heroBadge::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #54c99a;
+  box-shadow: 0 0 0 4px rgba(84, 201, 154, 0.14);
+}
+
+.heroArtwork {
+  filter: drop-shadow(0 26px 34px rgba(49, 55, 114, 0.12));
+}
+
+.contentSection {
+  width: 100%;
+  max-width: 72rem;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.serviceItem {
+  border: 1px solid transparent;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .serviceItem:hover {
+    transform: translateY(-3px);
+    border-color: rgba(91, 92, 240, 0.12);
+    background-color: #fff;
+    box-shadow: 0 12px 30px rgba(49, 55, 114, 0.08);
+  }
+}
+
+.serviceNumber {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+@media (min-width: 1024px) {
+  .serviceItem:nth-child(3n + 2) {
+    margin-top: 1.25rem;
+  }
 }
 
 .hirePanel {
-  background-color: #f1f1f1;
-  background-image: url('/assets/img/main/hire.png');
-  background-position: right bottom;
-  background-repeat: no-repeat;
-  background-size: 50% auto;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background: linear-gradient(115deg, #f0f1ff 0%, #f7f8ff 58%, #edf6ff 100%);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  color: var(--ink);
+}
+
+.hirePanel::before,
+.hirePanel::after {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.hirePanel::before {
+  right: 3rem;
+  bottom: -9rem;
+  width: 20rem;
+  height: 20rem;
+  border: 1px solid rgba(91, 92, 240, 0.12);
+}
+
+.hirePanel::after {
+  top: -9rem;
+  right: -5rem;
+  width: 28rem;
+  height: 28rem;
+  background: radial-gradient(circle, rgba(117, 103, 255, 0.16), rgba(117, 103, 255, 0) 68%);
 }
 
 @media (max-width: 768px) {
-  .hirePanel {
-    background-size: 70% auto;
+  .heroSection {
+    min-height: auto;
+  }
+
+  .contentSection {
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .serviceItem {
+    transition: none;
+  }
+
+  .serviceItem:hover {
+    transform: none;
   }
 }

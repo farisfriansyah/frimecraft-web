@@ -1,7 +1,16 @@
 .pageRoot {
   width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
 }
 
 .overview {
   white-space: pre-line;
+}
+
+@media (max-width: 640px) {
+  .pageRoot {
+    padding: 1.5rem 1.25rem 3.5rem;
+  }
 }

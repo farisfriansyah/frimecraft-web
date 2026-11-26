@@ -1,7 +1,39 @@
 .pageRoot {
   width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
 }
 
 .content {
-  max-width: none;
+  max-width: 76ch;
+  padding-top: 2rem;
+  color: var(--muted);
+}
+
+.content :global(h2),
+.content :global(h3),
+.content :global(h4) {
+  color: var(--ink);
+}
+
+.content :global(a) {
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.content :global(blockquote) {
+  border-left-color: var(--accent);
+  color: var(--muted);
+}
+
+.content :global(img) {
+  border-radius: 1rem;
+}
+
+@media (max-width: 640px) {
+  .pageRoot {
+    padding: 2rem 1.25rem 3.5rem;
+  }
 }

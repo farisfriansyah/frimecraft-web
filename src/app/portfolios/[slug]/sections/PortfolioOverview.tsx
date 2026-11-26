@@ -10,9 +10,9 @@ type PortfolioOverviewProps = {
 
 export function PortfolioOverview({ description, tags, projectUrl, dictionary }: PortfolioOverviewProps) {
   return (
-    <section className="mt-8 rounded-2xl border border-black/10 bg-white/80 p-6">
-      <h2 className="text-xl font-semibold">{dictionary.portfolioDetail.overviewTitle}</h2>
-      <p className={`${styles.overview} mt-3 text-sm leading-relaxed text-black/68`}>
+    <section className="mt-10 border-t border-[color:var(--line)] pt-8">
+      <h2 className="text-xl font-semibold text-[color:var(--ink)]">{dictionary.portfolioDetail.overviewTitle}</h2>
+      <p className={`${styles.overview} mt-3 text-sm leading-relaxed text-[color:var(--muted)]`}>
         {description || dictionary.common.noDescription}
       </p>
 
@@ -22,7 +22,7 @@ export function PortfolioOverview({ description, tags, projectUrl, dictionary }:
           .map((tag) => tag.trim())
           .filter(Boolean)
           .map((tag) => (
-            <span key={tag} className="rounded-full border border-black/15 bg-black/5 px-3 py-1 text-xs font-medium">
+            <span key={tag} className="rounded-full border border-[color:var(--line)] bg-[color:var(--fog)] px-3 py-1 text-xs font-medium text-[color:var(--muted)]">
               {tag}
             </span>
           ))}
@@ -33,7 +33,7 @@ export function PortfolioOverview({ description, tags, projectUrl, dictionary }:
           href={projectUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-6 inline-block rounded-full bg-black px-5 py-2.5 text-sm font-semibold text-white"
+          className="mt-6 inline-block rounded-lg bg-[color:var(--accent)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--accent-strong)]"
         >
           {dictionary.portfolioDetail.visitLiveProject}
         </a>

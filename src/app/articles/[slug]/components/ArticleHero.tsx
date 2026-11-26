@@ -7,7 +7,7 @@ type ArticleHeroProps = {
 export function ArticleHero({ title, excerpt, featuredImage }: ArticleHeroProps) {
   return (
     <>
-      <h1 className="mt-3 text-4xl leading-tight font-semibold tracking-tight">{title}</h1>
+      <h1 className="mt-3 text-4xl leading-tight font-semibold">{title}</h1>
       {excerpt ? <p className="mt-4 text-lg text-black/65">{excerpt}</p> : null}
 
       {featuredImage ? (

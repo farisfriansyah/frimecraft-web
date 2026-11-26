@@ -7,7 +7,7 @@ type PortfolioBackLinkProps = {
 
 export function PortfolioBackLink({ dictionary }: PortfolioBackLinkProps) {
   return (
-    <Link href="/portfolios" className="text-sm font-semibold text-[color:var(--accent)]">
+    <Link href="/portfolios" className="inline-flex text-sm font-semibold text-[color:var(--accent-strong)] hover:text-[color:var(--ink)]">
       {dictionary.portfolioDetail.backToPortfolios}
     </Link>
   );

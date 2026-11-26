@@ -15,13 +15,13 @@ export function ProfilePageHeader({ profile, dictionary, locale }: ProfilePageHe
       eyebrow={dictionary.common.profile}
       title={profile.name}
       description={profile.headline}
-      className="mb-8 rounded-[2rem] border border-black/10 bg-[color:var(--paper)] p-8 shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
+      className="mx-auto mb-2 w-full max-w-6xl"
       actions={(
         <>
-          <Link href={withLocalePath(locale, "/")} className="rounded-full border border-black/20 bg-white px-5 py-2 text-sm font-semibold transition hover:bg-black hover:text-white">
+          <Link href={withLocalePath(locale, "/")} className="py-2 text-sm font-semibold text-[color:var(--muted)] hover:text-[color:var(--accent-strong)]">
             {dictionary.profilePage.backToHomeSection}
           </Link>
-          <Link href={withLocalePath(locale, "/portfolios")} className="rounded-full bg-black px-5 py-2 text-sm font-semibold text-white">
+          <Link href={withLocalePath(locale, "/portfolios")} className="rounded-lg bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--accent-strong)]">
             {dictionary.profilePage.viewPortfolios}
           </Link>
         </>

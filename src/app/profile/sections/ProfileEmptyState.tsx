@@ -7,7 +7,7 @@ type ProfileEmptyStateProps = {
 
 export function ProfileEmptyState({ dictionary }: ProfileEmptyStateProps) {
   return (
-    <main className="mx-auto flex w-full flex-1 flex-col">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-12 md:py-16">
       <EmptyStateMessage
         title={dictionary.profilePage.publicProfile}
         message={dictionary.profilePage.unavailable}

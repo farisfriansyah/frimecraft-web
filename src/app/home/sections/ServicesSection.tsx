@@ -1,5 +1,6 @@
 import { SectionHeader } from "@/components/ui/section-header";
 import type { AppDictionary } from "@/lib/i18n";
+import styles from "../home.module.css";
 
 type ServiceItem = {
   title: string;
@@ -13,23 +14,21 @@ type ServicesSectionProps = {
 
 export function ServicesSection({ services, dictionary }: ServicesSectionProps) {
   return (
-    <section id="rl-services" className="section-fade-rise mt-20">
+    <section id="rl-services" className={`section-fade-rise mt-20 ${styles.contentSection}`}>
       <SectionHeader
         eyebrow={dictionary.common.services}
         title={dictionary.homePage.servicesTitle}
-        titleClassName="font-serif-display text-4xl"
         className="mb-8"
       />
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
         {services.map((service, index) => (
           <article
             key={service.title}
-            className="rounded-2xl border border-black/10 bg-white/80 p-6 shadow-[0_8px_20px_rgba(0,0,0,0.05)]"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className={styles.serviceItem}
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-black/45">0{index + 1}</p>
-            <h3 className="mt-3 text-2xl font-semibold tracking-tight">{service.title}</h3>
-            <p className="mt-3 text-sm leading-relaxed text-black/62">{service.description}</p>
+            <span className={styles.serviceNumber}>0{index + 1}</span>
+            <h3 className="mt-4 text-xl font-semibold text-[color:var(--ink)]">{service.title}</h3>
+            <p className="mt-2 max-w-sm text-sm leading-relaxed text-[color:var(--muted)]">{service.description}</p>
           </article>
         ))}
       </div>

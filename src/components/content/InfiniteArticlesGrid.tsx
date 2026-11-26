@@ -21,7 +21,7 @@ type ArticlesPayload = {
 
 function ArticleCardSkeleton() {
   return (
-    <article className="rounded-2xl border border-black/10 bg-white/70 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.05)]">
+    <article className="border-t border-[color:var(--line)] py-5">
       <div className="animate-pulse">
         <div className="h-3 w-2/5 rounded bg-black/10" />
         <div className="mt-4 h-5 w-4/5 rounded bg-black/10" />
@@ -103,22 +103,22 @@ export function InfiniteArticlesGrid({
 
   return (
     <>
-      <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <section className="grid gap-x-8 md:grid-cols-2 lg:grid-cols-3">
         {items.map((article) => (
-          <article key={article.id} className="rounded-2xl border border-black/10 bg-white/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.05)]">
-            <p className="text-xs uppercase tracking-[0.18em] text-black/40">
+          <article key={article.id} className="border-t border-[color:var(--line)] py-5">
+            <p className="text-xs font-medium uppercase text-[color:var(--muted)]">
               {new Date(article.createdAt).toLocaleDateString("id-ID", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",
               })}
             </p>
-            <h2 className="mt-3 text-xl leading-tight font-semibold">{article.title}</h2>
+            <h2 className="mt-3 text-lg leading-snug font-semibold text-[color:var(--ink)]">{article.title}</h2>
             {article.sortNumber !== null ? (
-              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-black/45">Sort #{article.sortNumber}</p>
+              <p className="mt-2 text-xs font-semibold uppercase text-black/45">Sort #{article.sortNumber}</p>
             ) : null}
-            <p className="mt-2 line-clamp-3 text-sm text-black/60">{article.excerpt || dictionary.common.noExcerpt}</p>
-            <Link href={`/articles/${article.slug}`} className="mt-5 inline-block text-sm font-semibold text-[color:var(--accent)]">
+            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[color:var(--muted)]">{article.excerpt || dictionary.common.noExcerpt}</p>
+            <Link href={`/articles/${article.slug}`} className="mt-4 inline-block text-sm font-semibold text-[color:var(--accent-strong)]">
               {locale === "en" ? "Read article" : "Baca artikel"}
             </Link>
           </article>
@@ -133,7 +133,7 @@ export function InfiniteArticlesGrid({
         ) : null}
       </section>
 
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-black/50">
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--line)] py-5 text-sm text-[color:var(--muted)]">
         <p>{statusText}</p>
         {hasMore ? <p>{locale === "en" ? "Scroll down to load more..." : "Scroll ke bawah untuk memuat lagi..."}</p> : <p>{locale === "en" ? "All articles loaded." : "Semua artikel sudah dimuat."}</p>}
       </div>

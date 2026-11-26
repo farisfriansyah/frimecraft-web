@@ -21,19 +21,19 @@ export function LocaleSwitcher({ locale, label, indonesianLabel, englishLabel }:
   };
 
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-medium">
-      <span className="text-black/55">{label}</span>
+    <div className="inline-flex items-center gap-2 border-l border-[color:var(--line)] pl-4 text-xs font-medium">
+      <span className="sr-only">{label}</span>
       <button
         type="button"
         onClick={() => handleChange("id")}
-        className={`rounded-full px-2 py-1 transition ${locale === "id" ? "bg-black text-white" : "text-black/65 hover:bg-black/5"}`}
+        className={`py-1 transition ${locale === "id" ? "font-semibold text-[color:var(--accent-strong)]" : "text-[color:var(--muted)] hover:text-[color:var(--ink)]"}`}
       >
         {indonesianLabel}
       </button>
       <button
         type="button"
         onClick={() => handleChange("en")}
-        className={`rounded-full px-2 py-1 transition ${locale === "en" ? "bg-black text-white" : "text-black/65 hover:bg-black/5"}`}
+        className={`py-1 transition ${locale === "en" ? "font-semibold text-[color:var(--accent-strong)]" : "text-[color:var(--muted)] hover:text-[color:var(--ink)]"}`}
       >
         {englishLabel}
       </button>

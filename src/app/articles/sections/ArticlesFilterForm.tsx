@@ -16,16 +16,16 @@ export function ArticlesFilterForm({ q, tag, dictionary }: ArticlesFilterFormPro
         name="q"
         defaultValue={q}
         placeholder={dictionary.articlesPage.searchPlaceholder}
-        className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
+        className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)] px-4 py-3 text-sm text-[color:var(--ink)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-[color:var(--accent)] focus:bg-white focus:ring-4 focus:ring-[color:var(--accent)]/10"
       />
       <input
         type="text"
         name="tag"
         defaultValue={tag}
         placeholder={dictionary.articlesPage.tagPlaceholder}
-        className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm outline-none focus:border-[color:var(--accent)]"
+        className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)] px-4 py-3 text-sm text-[color:var(--ink)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-[color:var(--accent)] focus:bg-white focus:ring-4 focus:ring-[color:var(--accent)]/10"
       />
-      <button type="submit" className="rounded-xl bg-black px-4 py-2.5 text-sm font-semibold text-white">
+      <button type="submit" className="rounded-lg bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[color:var(--accent-strong)]">
         {dictionary.common.apply}
       </button>
     </FilterPanel>

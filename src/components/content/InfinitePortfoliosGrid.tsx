@@ -28,15 +28,14 @@ function normalizeImageUrl(value: string | null, origin: string): string | null 
 
 function PortfolioCardSkeleton() {
   return (
-    <article className="overflow-hidden rounded-2xl border border-black/10 bg-white/70 shadow-[0_8px_24px_rgba(0,0,0,0.05)]">
-      <div className="h-44 animate-pulse bg-black/10" />
-      <div className="p-6">
+    <article>
+      <div className="h-48 animate-pulse rounded-2xl bg-black/10" />
+      <div className="pt-4">
         <div className="animate-pulse">
           <div className="h-5 w-4/5 rounded bg-black/10" />
           <div className="mt-3 h-3 w-1/2 rounded bg-black/10" />
           <div className="mt-4 h-3 w-full rounded bg-black/10" />
           <div className="mt-2 h-3 w-5/6 rounded bg-black/10" />
-          <div className="mt-4 h-4 w-24 rounded bg-black/10" />
         </div>
       </div>
     </article>
@@ -118,23 +117,23 @@ export function InfinitePortfoliosGrid({
 
   return (
     <>
-      <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <section className="grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <article key={item.id} className="overflow-hidden rounded-2xl border border-black/10 bg-white/80 shadow-[0_8px_24px_rgba(0,0,0,0.05)]">
+          <article key={item.id} className="group min-w-0">
             {item.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.imageUrl} alt={item.title} className="h-44 w-full object-cover" />
+              <img src={item.imageUrl} alt={item.title} className="h-48 w-full rounded-2xl object-cover transition-transform duration-300 group-hover:scale-[1.015]" />
             ) : (
-              <div className="flex h-44 items-center justify-center bg-black/5 text-sm text-black/45">{dictionary.common.noPreviewImage}</div>
+              <div className="flex h-48 items-center justify-center rounded-2xl bg-[#f0f1f5] text-sm text-[color:var(--muted)]">{dictionary.common.noPreviewImage}</div>
             )}
-            <div className="p-6">
-              <h2 className="text-xl leading-tight font-semibold">{item.title}</h2>
+            <div className="pt-4">
+              <h2 className="text-lg leading-snug font-semibold text-[color:var(--ink)]">{item.title}</h2>
               {item.sortNumber !== null ? (
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-black/45">Sort #{item.sortNumber}</p>
+                <p className="mt-2 text-xs font-semibold uppercase text-black/45">Sort #{item.sortNumber}</p>
               ) : null}
-              <p className="mt-2 text-sm text-black/60">{(item.workFor?.name || dictionary.common.client) + " / " + (item.workAt?.name || dictionary.common.work)}</p>
-              <p className="mt-3 line-clamp-3 text-sm text-black/62">{item.description || dictionary.common.noDescription}</p>
-              <div className="mt-4 flex flex-wrap gap-3">
+              <p className="mt-1.5 text-sm text-[color:var(--muted)]">{(item.workFor?.name || dictionary.common.client) + " / " + (item.workAt?.name || dictionary.common.work)}</p>
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[color:var(--muted)]">{item.description || dictionary.common.noDescription}</p>
+              <div className="mt-3 flex flex-wrap gap-4">
                 {item.slug ? (
                   <Link href={`/portfolios/${item.slug}`} className="inline-block text-sm font-semibold text-[color:var(--accent)]">
                     {dictionary.common.viewDetails}
@@ -160,12 +159,12 @@ export function InfinitePortfoliosGrid({
       </section>
 
       {items.length === 0 ? (
-        <p className="mt-10 rounded-2xl border border-dashed border-black/25 bg-white/60 p-6 text-sm text-black/60">
+        <p className="mt-10 border-t border-[color:var(--line)] py-5 text-sm text-[color:var(--muted)]">
           {locale === "en" ? "No published portfolios yet." : "Belum ada portofolio yang dipublish."}
         </p>
       ) : null}
 
-      <footer className="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-black/50">
+      <footer className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--line)] py-5 text-sm text-[color:var(--muted)]">
         <p>
           {statusText}
           <span className="ml-2">

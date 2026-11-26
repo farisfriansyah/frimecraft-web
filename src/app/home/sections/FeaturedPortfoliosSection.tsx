@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { PublicPortfolio } from "@/types/public-api";
 import type { AppDictionary } from "@/lib/i18n";
 import { SectionHeader } from "@/components/ui/section-header";
+import styles from "../home.module.css";
 
 type FeaturedPortfoliosSectionProps = {
   items: PublicPortfolio[];
@@ -10,7 +11,7 @@ type FeaturedPortfoliosSectionProps = {
 
 export function FeaturedPortfoliosSection({ items, dictionary }: FeaturedPortfoliosSectionProps) {
   return (
-    <section id="rl-portfolio" className="section-fade-rise mt-20">
+    <section id="rl-portfolio" className={`section-fade-rise mt-20 ${styles.contentSection}`}>
       <SectionHeader
         eyebrow={dictionary.common.portfolio}
         title={dictionary.homePage.featuredPortfoliosTitle}
@@ -21,20 +22,20 @@ export function FeaturedPortfoliosSection({ items, dictionary }: FeaturedPortfol
           </Link>
         )}
       />
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <article key={item.id} className="overflow-hidden rounded-2xl border border-black/10 bg-[color:var(--paper)]">
+          <article key={item.id} className="group min-w-0">
             {item.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.imageUrl} alt={item.title} className="h-44 w-full object-cover" />
+              <img src={item.imageUrl} alt={item.title} className="h-48 w-full rounded-2xl object-cover transition-transform duration-300 group-hover:scale-[1.015]" />
             ) : (
-              <div className="flex h-44 items-center justify-center bg-black/5 text-sm text-black/45">{dictionary.common.noPreviewImage}</div>
+              <div className="flex h-48 items-center justify-center rounded-2xl bg-[#f0f1f5] text-sm text-[color:var(--muted)]">{dictionary.common.noPreviewImage}</div>
             )}
-            <div className="p-6">
-              <h3 className="text-xl font-semibold leading-tight">{item.title}</h3>
-              <p className="mt-2 text-sm text-black/62">{(item.workFor?.name || dictionary.common.client) + " / " + (item.workAt?.name || dictionary.common.work)}</p>
-              <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-black/62">{item.description || dictionary.common.noDescription}</p>
-              <div className="mt-4 flex flex-wrap gap-3">
+            <div className="pt-4">
+              <h3 className="text-lg font-semibold leading-tight text-[color:var(--ink)]">{item.title}</h3>
+              <p className="mt-1.5 text-sm text-[color:var(--muted)]">{(item.workFor?.name || dictionary.common.client) + " / " + (item.workAt?.name || dictionary.common.work)}</p>
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[color:var(--muted)]">{item.description || dictionary.common.noDescription}</p>
+              <div className="mt-3 flex flex-wrap gap-4">
                 {item.slug ? (
                   <Link href={`/portfolios/${item.slug}`} className="inline-block text-sm font-semibold text-[color:var(--accent)]">
                     {dictionary.common.viewDetails}
@@ -50,7 +51,7 @@ export function FeaturedPortfoliosSection({ items, dictionary }: FeaturedPortfol
           </article>
         ))}
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-black/25 bg-white/60 p-6 text-sm text-black/60 md:col-span-3">
+          <div className="border-t border-[color:var(--line)] py-5 text-sm text-[color:var(--muted)] md:col-span-3">
             {dictionary.homePage.noFeaturedPortfolio}
           </div>
         ) : null}

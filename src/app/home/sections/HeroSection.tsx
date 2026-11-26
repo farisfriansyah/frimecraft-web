@@ -14,25 +14,26 @@ export function HeroSection({ siteDescription, dictionary, locale }: HeroSection
   return (
     <section id="rl-hero" className={`section-fade-rise ${styles.heroSection}`}>
       <div className={styles.heroOverlay} />
-      <div className={`${styles.heroContent} mx-auto flex min-h-[88vh] w-full max-w-6xl items-center px-6 py-10`}>
+      <div className={`${styles.heroContent} mx-auto flex w-full max-w-6xl items-center px-6 py-14 md:py-16`}>
         <div className="grid w-full items-center gap-6 md:grid-cols-2">
-          <div className="order-2 text-center md:order-1 md:text-left">
-            <h1 className="text-[3rem] font-bold leading-[1] md:text-[4.5rem] md:leading-[1.05]">
+          <div className={`order-2 mx-auto text-center md:order-1 md:mx-0 md:text-left ${styles.heroCopy}`}>
+            <span className={styles.heroBadge}>Digital studio · Design &amp; development</span>
+            <h1 className="mt-5 text-[3.25rem] font-bold leading-[0.98] text-[color:var(--ink)] sm:text-6xl md:text-[4.75rem] md:leading-[1.02]">
               Frime Craft
               <br />
-              Studio
+              <span className="bg-gradient-to-r from-[color:var(--accent)] to-[#8b73ef] bg-clip-text text-transparent">Studio</span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg">
+            <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-[color:var(--muted)] md:mx-0 md:mt-6 md:text-lg md:leading-8">
               {siteDescription || dictionary.homePage.heroFallback}
             </p>
 
-            <div className="mt-7 flex flex-wrap justify-center gap-2 md:justify-start">
+            <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
               <CtaButtonLink href={withLocalePath(locale, "/portfolios")} size="lg">{dictionary.homePage.seeMyPortfolios}</CtaButtonLink>
-              <CtaButtonLink href={withLocalePath(locale, "/profile")} size="lg">{dictionary.homePage.downloadProposal}</CtaButtonLink>
+              <CtaButtonLink href={withLocalePath(locale, "/profile")} size="lg" variant="secondary">{dictionary.homePage.downloadProposal}</CtaButtonLink>
             </div>
           </div>
 
-          <div className="order-1 mx-auto w-full max-w-[620px] text-center md:order-2">
+          <div className={`order-1 mx-auto w-full max-w-[620px] text-center md:order-2 ${styles.heroArtwork}`}>
             <Image
               src="/assets/img/main/hero.svg"
               alt="Frimecraft hero illustration"

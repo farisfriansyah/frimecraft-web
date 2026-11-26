@@ -89,7 +89,7 @@ export default async function PortfoliosPage({ searchParams }: PortfoliosPagePro
   const dictionary = getDictionary(locale);
 
   return (
-    <main className={`${styles.pageRoot} mx-auto flex w-full flex-1 flex-col`}>
+    <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-10 md:py-14`}>
       <PortfoliosPageHeader dictionary={dictionary} />
       <PortfoliosFilterForm q={q} tag={tag} featured={featured} dictionary={dictionary} />
 

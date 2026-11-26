@@ -16,12 +16,12 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
 
   const links = [
     { href: withLocalePath(locale, "/"), label: dictionary.common.home },
-    { href: withLocalePath(locale, "/profile"), label: dictionary.common.about },
-    { href: withLocalePath(locale, "/profile"), label: dictionary.common.services },
-    { href: withLocalePath(locale, "/profile"), label: dictionary.common.profile },
+    { href: `${withLocalePath(locale, "/")}#rl-about`, label: dictionary.common.about },
+    { href: `${withLocalePath(locale, "/")}#rl-services`, label: dictionary.common.services },
+    { href: `${withLocalePath(locale, "/")}#rl-profile`, label: dictionary.common.profile },
     { href: withLocalePath(locale, "/portfolios"), label: dictionary.common.portfolio },
     { href: withLocalePath(locale, "/articles"), label: dictionary.common.articles },
-    { href: withLocalePath(locale, "/profile"), label: dictionary.common.hireMe },
+    { href: `${withLocalePath(locale, "/")}#rl-hireme`, label: dictionary.common.hireMe },
   ];
 
   useEffect(() => {
@@ -32,24 +32,25 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-black/10 bg-[color:var(--paper)]/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-        <Link href={withLocalePath(locale, "/")} className="tracking-tight text-xl font-semibold">
+    <header className="sticky top-0 z-30 border-b border-[color:var(--line)]/80 bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-5 px-5 py-3.5 md:px-6">
+        <Link href={withLocalePath(locale, "/")} className="flex shrink-0 items-center gap-2 text-xl font-bold text-[color:var(--ink)]">
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[color:var(--accent)] shadow-[0_0_0_4px_rgba(91,92,240,0.12)]" />
           frimecraft
         </Link>
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/15 bg-white text-lg md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[color:var(--line)] bg-white text-lg text-[color:var(--ink)] shadow-sm transition hover:border-[color:var(--accent)] md:hidden"
           aria-label={dictionary.header.toggleMenu}
           aria-expanded={open}
         >
-          {open ? "x" : "|||"}
+          {open ? "×" : "☰"}
         </button>
-        <div className="hidden items-center gap-4 md:flex">
-          <nav className="items-center gap-6 text-sm font-medium md:flex">
+        <div className="hidden items-center gap-3 md:flex">
+          <nav className="flex items-center gap-5 text-[13px] font-medium">
             {links.map((link) => (
-              <Link key={`${link.label}-${link.href}`} href={link.href} className="hover:text-[color:var(--accent)] transition-colors">
+              <Link key={`${link.label}-${link.href}`} href={link.href} className="py-2 text-[color:var(--muted)] hover:text-[color:var(--accent-strong)]">
                 {link.label}
               </Link>
             ))}
@@ -68,18 +69,18 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
             type="button"
             aria-label="Close menu backdrop"
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/35"
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
           />
-          <aside className="absolute right-0 top-0 h-full w-[78%] max-w-sm border-l border-black/10 bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
-              <p className="text-base font-semibold">{dictionary.header.menuTitle}</p>
+          <aside className="absolute right-0 top-0 h-full w-[82%] max-w-sm border-l border-[color:var(--line)] bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[color:var(--line)] px-5 py-4">
+              <p className="text-base font-semibold text-[color:var(--ink)]">{dictionary.header.menuTitle}</p>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-black/15"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--line)] text-lg text-[color:var(--muted)] hover:bg-[color:var(--fog)]"
                 aria-label={dictionary.header.closeMenu}
               >
-                x
+                ×
               </button>
             </div>
             <nav className="flex flex-col gap-1 px-4 py-4 text-sm font-medium">
@@ -88,13 +89,13 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
                   key={`${link.label}-${link.href}`}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2.5 hover:bg-black/5"
+                  className="rounded-xl px-3 py-3 text-[color:var(--ink)] hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent-strong)]"
                 >
                   {link.label}
                 </Link>
               ))}
             </nav>
-            <div className="border-t border-black/10 px-4 py-4">
+            <div className="border-t border-[color:var(--line)] px-4 py-4">
               <LocaleSwitcher
                 locale={locale}
                 label={dictionary.localeSwitcher.label}

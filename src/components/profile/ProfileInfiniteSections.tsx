@@ -87,7 +87,7 @@ function useAutoLoad(total: number, chunkSize: number) {
 
 function BlockSkeleton({ lines = 3 }: { lines?: number }) {
   return (
-    <div className="rounded-2xl border border-black/10 bg-white/70 p-5">
+    <div className="border-t border-[color:var(--line)] py-5">
       <div className="animate-pulse">
         <div className="h-5 w-2/5 rounded bg-black/10" />
         <div className="mt-3 h-3 w-1/3 rounded bg-black/10" />
@@ -122,23 +122,23 @@ export function ProfileInfiniteSections({
   return (
     <div className="space-y-10">
       <article id="item-jobs">
-        <h2 className="text-2xl font-semibold tracking-tight">Job Experiences</h2>
-        <div className="mt-4 space-y-4">
+        <h2 className="text-2xl font-semibold">Job Experiences</h2>
+        <div className="timeline-list mt-4">
           {visibleExperiences.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-black/10 bg-white/80 p-5">
+            <div key={item.id} className="timeline-item">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h3 className="text-lg font-semibold">{item.position}</h3>
-                  <p className="text-sm text-black/55">
+                  <p className="text-sm text-[color:var(--muted)]">
                     {item.company?.name || "Unknown company"}
                     {item.location ? ` - ${item.location}` : ""}
                   </p>
                 </div>
-                <p className="text-xs uppercase tracking-[0.14em] text-black/50">
+                <p className="text-xs font-medium uppercase text-[color:var(--muted)]">
                   {formatExpDate(item.startMonth, item.startYear, item.endMonth, item.endYear, item.isCurrent)}
                 </p>
               </div>
-              {item.description ? <p className="mt-3 text-sm leading-relaxed text-black/68">{item.description}</p> : null}
+              {item.description ? <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">{item.description}</p> : null}
             </div>
           ))}
 
@@ -156,20 +156,20 @@ export function ProfileInfiniteSections({
       </article>
 
       <article id="item-education">
-        <h2 className="text-2xl font-semibold tracking-tight">Educations</h2>
-        <div className="mt-4 space-y-4">
+        <h2 className="text-2xl font-semibold">Educations</h2>
+        <div className="mt-3">
           {visibleEducations.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-black/10 bg-white/80 p-5">
+            <div key={item.id} className="border-t border-[color:var(--line)] py-5 first:border-0 first:pt-0">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h3 className="text-lg font-semibold">{item.institution}</h3>
-                  <p className="text-sm text-black/55">{item.degree || "Degree not specified"}</p>
+                  <p className="text-sm text-[color:var(--muted)]">{item.degree || "Degree not specified"}</p>
                 </div>
-                <p className="text-xs uppercase tracking-[0.14em] text-black/50">
+                <p className="text-xs font-medium uppercase text-[color:var(--muted)]">
                   {formatMonthDate(item.startDate)} - {formatMonthDate(item.endDate)}
                 </p>
               </div>
-              {item.description ? <p className="mt-3 text-sm leading-relaxed text-black/68">{item.description}</p> : null}
+              {item.description ? <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">{item.description}</p> : null}
             </div>
           ))}
 
@@ -187,16 +187,16 @@ export function ProfileInfiniteSections({
       </article>
 
       <article id="item-certificate">
-        <h2 className="text-2xl font-semibold tracking-tight">Certificates</h2>
-        <div className="mt-4 space-y-3">
+        <h2 className="text-2xl font-semibold">Certificates</h2>
+        <div className="mt-3">
           {visibleCertifications.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-black/10 bg-white/80 p-5">
+            <div key={item.id} className="border-t border-[color:var(--line)] py-5 first:border-0 first:pt-0">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="text-sm text-black/55">{item.issuer || "Issuer not specified"}</p>
+                  <p className="text-sm text-[color:var(--muted)]">{item.issuer || "Issuer not specified"}</p>
                 </div>
-                <p className="text-xs uppercase tracking-[0.14em] text-black/50">{formatMonthDate(item.issueDate)}</p>
+                <p className="text-xs font-medium uppercase text-[color:var(--muted)]">{formatMonthDate(item.issueDate)}</p>
               </div>
               {item.url ? (
                 <a href={item.url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-[color:var(--accent)]">
@@ -220,15 +220,15 @@ export function ProfileInfiniteSections({
       </article>
 
       <article id="item-skill">
-        <h2 className="text-2xl font-semibold tracking-tight">Skills</h2>
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <h2 className="text-2xl font-semibold">Skills</h2>
+        <div className="mt-4 grid gap-x-8 md:grid-cols-2">
           {visibleSkills.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-black/10 bg-white/80 p-4">
+            <div key={item.id} className="border-t border-[color:var(--line)] py-4">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <p className="font-medium">{item.name}</p>
-                <p className="text-xs text-black/55">{item.level ?? 0}%</p>
+                <p className="text-xs text-[color:var(--muted)]">{item.level ?? 0}%</p>
               </div>
-              <div className="h-2 rounded-full bg-black/10">
+              <div className="h-1 rounded-full bg-black/10">
                 <div
                   className="h-full rounded-full bg-[color:var(--accent)]"
                   style={{ width: `${Math.max(Math.min(item.level ?? 0, 100), 0)}%` }}
