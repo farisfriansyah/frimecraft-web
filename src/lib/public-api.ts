@@ -156,11 +156,12 @@ export async function getPublicPortfoliosWithFilters(options?: {
   }
 
   const payload = (await response.json()) as {
+    success?: boolean;
     data?: PublicPortfolio[];
     pagination?: Pagination;
   };
 
-  if (!payload.data || !payload.pagination) {
+  if (payload.success === false || !Array.isArray(payload.data) || !payload.pagination) {
     throw new Error("Public API portfolios response has invalid shape");
   }
 

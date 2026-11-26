@@ -87,6 +87,7 @@ export type AppDictionary = {
     tagPlaceholder: string;
     allPortfoliosOption: string;
     featuredOnlyOption: string;
+    featuredFilterLabel: string;
     filteredTitle: string;
   };
   articleDetail: {
@@ -135,7 +136,7 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
       menuTitle: "Menu",
     },
     footer: {
-      poweredBy: "Ditenagai oleh frontend Next.js dan Frimecraft Admin sebagai sumber konten.",
+      poweredBy: "Dibuat dengan ❤️ oleh Frime Craft Studio",
     },
     homePage: {
       heroFallback: "Merancang, membangun, dan menyelesaikan masalah dengan ide kreatif di berbagai jenis proyek.",
@@ -190,6 +191,7 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
       tagPlaceholder: "Filter tag",
       allPortfoliosOption: "Semua portofolio",
       featuredOnlyOption: "Hanya featured",
+      featuredFilterLabel: "Filter portofolio unggulan",
       filteredTitle: "Hasil Pencarian Portofolio",
     },
     articleDetail: {
@@ -205,7 +207,7 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
     localeSwitcher: {
       label: "Bahasa",
       indonesian: "Indonesia",
-      english: "Inggris",
+      english: "English",
     },
   },
   en: {
@@ -236,7 +238,7 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
       menuTitle: "Menu",
     },
     footer: {
-      poweredBy: "Powered by Next.js frontend and Frimecraft Admin as content source.",
+      poweredBy: "Made with ❤️ by Frime Craft Studio",
     },
     homePage: {
       heroFallback: "Designing, crafting, and solving problems with creative ideas across various project types.",
@@ -291,6 +293,7 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
       tagPlaceholder: "Filter tag",
       allPortfoliosOption: "All portfolios",
       featuredOnlyOption: "Featured only",
+      featuredFilterLabel: "Filter featured portfolios",
       filteredTitle: "Search Portfolios",
     },
     articleDetail: {

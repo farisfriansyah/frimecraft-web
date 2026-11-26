@@ -35,6 +35,11 @@ body::before {
     #fbfbfd;
 }
 
+main {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 html {
   scroll-behavior: smooth;
 }

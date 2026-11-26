@@ -30,6 +30,20 @@
 
 .content :global(img) {
   border-radius: 1rem;
+  height: auto;
+}
+
+.content :global(img),
+.content :global(video),
+.content :global(iframe) {
+  max-width: 100%;
+}
+
+.content :global(pre),
+.content :global(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 @media (max-width: 640px) {

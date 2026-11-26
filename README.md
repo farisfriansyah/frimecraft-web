@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - FRIMECRAFT_ADMIN_PUBLIC_API_BASE
 	- Example: http://localhost:3000/api/public
-	- If frimecraft-admin runs on a different port, update this value accordingly.
+	- Point this to frimecraft-admin, not this frontend's own API route. If both run locally, use different ports.
 
 ## Current Implemented Foundation
 
@@ -33,6 +33,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Articles listing page
 - Article detail page
 - Query-based filters and pagination for /articles and /portfolios
+- Portfolio filters update as you type; results load 12 at a time as you scroll, with a manual load-more and retry option.
 - JSON-LD structured data for article and portfolio detail pages
 - Public API client layer in src/lib/public-api.ts
 

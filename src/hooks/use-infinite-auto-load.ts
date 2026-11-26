@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function useInfiniteAutoLoad(totalPages: number, initialPage = 1) {
+export function useInfiniteAutoLoad(totalPages: number, initialPage = 1, enabled = true) {
   const [page, setPage] = useState(initialPage);
   const [isLoading, setIsLoading] = useState(false);
   const triggerRef = useRef<HTMLDivElement | null>(null);
@@ -10,7 +10,7 @@ export function useInfiniteAutoLoad(totalPages: number, initialPage = 1) {
   const hasMore = page < totalPages;
 
   useEffect(() => {
-    if (!hasMore || isLoading) return;
+    if (!enabled || !hasMore || isLoading) return;
 
     const node = triggerRef.current;
     if (!node) return;
@@ -26,7 +26,7 @@ export function useInfiniteAutoLoad(totalPages: number, initialPage = 1) {
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [hasMore, isLoading]);
+  }, [enabled, hasMore, isLoading]);
 
   return {
     page,

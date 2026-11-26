@@ -3,7 +3,66 @@
 }
 
 .filterForm {
-  grid-template-columns: 1fr 200px 180px auto;
+  grid-template-columns: 1fr 200px 200px auto;
+}
+
+.featuredSelect {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.75rem;
+  white-space: nowrap;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23687087' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+
+@supports (appearance: base-select) {
+  .featuredSelect,
+  .featuredSelect::picker(select) {
+    appearance: base-select;
+  }
+
+  .featuredSelect {
+    align-items: center;
+    gap: 0.75rem;
+    padding-right: 1rem;
+    background-image: none;
+  }
+
+  .featuredSelect::picker-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-left: auto;
+    content: "";
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23687087' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  .featuredSelect::picker(select) {
+    margin-top: 0.375rem;
+    padding: 0.375rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: white;
+    box-shadow: 0 10px 24px rgb(23 26 43 / 0.12);
+  }
+
+  .featuredSelect option {
+    padding: 0.625rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  .featuredSelect option:hover,
+  .featuredSelect option:focus {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .featuredSelect option::checkmark {
+    order: 1;
+    margin-left: auto;
+    color: var(--accent);
+  }
 }
 
 @media (max-width: 768px) {

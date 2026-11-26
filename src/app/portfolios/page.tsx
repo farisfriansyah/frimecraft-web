@@ -3,9 +3,8 @@ import { getFrontendSettings, getPublicPortfoliosWithFilters } from "@/lib/publi
 import { getDictionary, withLocalePath } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/i18n.server";
 import { buildSeoMetadata } from "@/lib/seo";
-import { InfinitePortfoliosGrid } from "@/components/content/InfinitePortfoliosGrid";
 import type { Pagination, PublicPortfolio } from "@/types/public-api";
-import { PortfoliosFilterForm } from "./sections/PortfoliosFilterForm";
+import { PortfoliosExplorer } from "./sections/PortfoliosExplorer";
 import { PortfoliosPageHeader } from "./sections/PortfoliosPageHeader";
 import styles from "./portfolios.module.css";
 
@@ -77,29 +76,29 @@ export default async function PortfoliosPage({ searchParams }: PortfoliosPagePro
     } as Pagination,
   };
 
-  const { items, pagination } = await getPublicPortfoliosWithFilters({
+  const result = await getPublicPortfoliosWithFilters({
     featuredOnly: featured,
     page,
     pageSize: 12,
     q: q || undefined,
     tag: tag || undefined,
     locale,
-  }).catch(() => fallback);
+  }).then((data) => ({ ...data, error: false })).catch((error: unknown) => {
+    console.error("Failed to load portfolios", error);
+    return { ...fallback, error: true };
+  });
 
   const dictionary = getDictionary(locale);
 
   return (
     <main className={`${styles.pageRoot} mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-10 md:py-14`}>
       <PortfoliosPageHeader dictionary={dictionary} />
-      <PortfoliosFilterForm q={q} tag={tag} featured={featured} dictionary={dictionary} />
-
-      <InfinitePortfoliosGrid
-        key={`portfolios:${page}:${q}:${tag}:${featured}`}
-        initialItems={items}
-        initialPagination={pagination}
-        q={q || undefined}
-        tag={tag || undefined}
-        featured={featured}
+      <PortfoliosExplorer
+        key={`portfolios:${page}:${q}:${tag}:${featured}:${locale}`}
+        initialFilters={{ q, tag, featured, page }}
+        initialItems={result.items}
+        initialPagination={result.pagination}
+        initialError={result.error}
         locale={locale}
       />
     </main>

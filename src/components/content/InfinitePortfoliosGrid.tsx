@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Pagination, PublicPortfolio } from "@/types/public-api";
 import { useInfiniteAutoLoad } from "@/hooks/use-infinite-auto-load";
 import { getDictionary } from "@/lib/i18n";
+import { fetchPortfolios } from "@/lib/portfolio-client";
 
 type InfinitePortfoliosGridProps = {
   initialItems: PublicPortfolio[];
@@ -15,20 +16,9 @@ type InfinitePortfoliosGridProps = {
   locale?: "id" | "en";
 };
 
-type PortfoliosPayload = {
-  data?: PublicPortfolio[];
-  pagination?: Pagination;
-};
-
-function normalizeImageUrl(value: string | null, origin: string): string | null {
-  if (!value) return null;
-  if (value.startsWith("http://") || value.startsWith("https://")) return value;
-  return `${origin}${value.startsWith("/") ? value : `/${value}`}`;
-}
-
 function PortfolioCardSkeleton() {
   return (
-    <article>
+    <article aria-hidden="true">
       <div className="h-48 animate-pulse rounded-2xl bg-black/10" />
       <div className="pt-4">
         <div className="animate-pulse">
@@ -39,6 +29,18 @@ function PortfolioCardSkeleton() {
         </div>
       </div>
     </article>
+  );
+}
+
+export function PortfolioGridSkeleton({ locale }: { locale: "id" | "en" }) {
+  return (
+    <div role="status" aria-label={locale === "en" ? "Loading portfolios" : "Memuat portofolio"}>
+      <div className="grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+        <PortfolioCardSkeleton />
+        <PortfolioCardSkeleton />
+        <PortfolioCardSkeleton />
+      </div>
+    </div>
   );
 }
 
@@ -53,9 +55,11 @@ export function InfinitePortfoliosGrid({
   const dictionary = getDictionary(locale || "id");
   const [items, setItems] = useState(initialItems);
   const [pagination, setPagination] = useState(initialPagination);
+  const [loadError, setLoadError] = useState(false);
   const { page, setPage, isLoading, setIsLoading, hasMore, triggerRef } = useInfiniteAutoLoad(
-    initialPagination.totalPages,
+    pagination.totalPages,
     initialPagination.page,
+    !loadError,
   );
 
   useEffect(() => {
@@ -70,44 +74,27 @@ export function InfinitePortfoliosGrid({
     const run = async () => {
       try {
         const nextPage = page + 1;
-        const params = new URLSearchParams({
-          featured: String(Boolean(featured)),
-          page: String(nextPage),
-          pageSize: String(initialPagination.pageSize),
-        });
-        if (q) params.set("q", q);
-        if (tag) params.set("tag", tag);
-        if (locale) params.set("lang", locale);
-
-        const response = await fetch(`/api/public/portfolios?${params.toString()}`, {
-          signal: controller.signal,
-          headers: { Accept: "application/json" },
-        });
-
-        if (!response.ok) throw new Error(`Failed to load portfolios: ${response.status}`);
-
-        const payload = (await response.json()) as PortfoliosPayload;
-        if (!payload.data || !payload.pagination) throw new Error("Invalid portfolios payload");
-
-        const origin = window.location.origin;
-        const normalized = payload.data.map((item) => ({
-          ...item,
-          imageUrl: normalizeImageUrl(item.imageUrl, origin),
-        }));
-
-        setItems((prev) => [...prev, ...normalized]);
-        setPagination(payload.pagination);
+        const result = await fetchPortfolios(
+          { q: q || "", tag: tag || "", featured: Boolean(featured), page: nextPage, locale: locale || "id" },
+          controller.signal,
+        );
+        if (controller.signal.aborted) return;
+        setItems((prev) => [...prev, ...result.items]);
+        setPagination(result.pagination);
         setPage(nextPage);
-      } catch {
-        // Keep existing items and stop loading on request failure.
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Failed to load more portfolios", error);
+          setLoadError(true);
+        }
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
 
     run();
     return () => controller.abort();
-  }, [featured, initialPagination.pageSize, isLoading, locale, page, pagination.totalPages, q, setIsLoading, setPage, tag]);
+  }, [featured, isLoading, locale, page, pagination.totalPages, q, setIsLoading, setPage, tag]);
 
   const statusText = useMemo(() => {
     return locale === "en"
@@ -122,7 +109,7 @@ export function InfinitePortfoliosGrid({
           <article key={item.id} className="group min-w-0">
             {item.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.imageUrl} alt={item.title} className="h-48 w-full rounded-2xl object-cover transition-transform duration-300 group-hover:scale-[1.015]" />
+              <img src={item.imageUrl} alt={item.title} loading="lazy" decoding="async" className="h-48 w-full rounded-2xl object-cover transition-transform duration-300 group-hover:scale-[1.015]" />
             ) : (
               <div className="flex h-48 items-center justify-center rounded-2xl bg-[#f0f1f5] text-sm text-[color:var(--muted)]">{dictionary.common.noPreviewImage}</div>
             )}
@@ -160,7 +147,9 @@ export function InfinitePortfoliosGrid({
 
       {items.length === 0 ? (
         <p className="mt-10 border-t border-[color:var(--line)] py-5 text-sm text-[color:var(--muted)]">
-          {locale === "en" ? "No published portfolios yet." : "Belum ada portofolio yang dipublish."}
+          {q || tag || featured
+            ? (locale === "en" ? "No portfolios match your filters." : "Tidak ada portofolio yang sesuai dengan filter.")
+            : (locale === "en" ? "No published portfolios yet." : "Belum ada portofolio yang dipublish.")}
         </p>
       ) : null}
 
@@ -171,7 +160,19 @@ export function InfinitePortfoliosGrid({
             <Link href="/" className="font-semibold text-[color:var(--accent)]">{dictionary.common.backToHome}</Link>
           </span>
         </p>
-        {hasMore ? <p>{locale === "en" ? "Scroll down to load more..." : "Scroll ke bawah untuk memuat lagi..."}</p> : <p>{locale === "en" ? "All portfolios loaded." : "Semua portofolio sudah dimuat."}</p>}
+        {hasMore ? (
+          <div className="flex items-center gap-3">
+            {loadError ? <p role="alert">{locale === "en" ? "Could not load more portfolios." : "Gagal memuat portofolio berikutnya."}</p> : null}
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => { setLoadError(false); setIsLoading(true); }}
+              className="font-semibold text-[color:var(--accent)] disabled:opacity-50"
+            >
+              {isLoading ? (locale === "en" ? "Loading..." : "Memuat...") : loadError ? (locale === "en" ? "Try again" : "Coba lagi") : (locale === "en" ? "Load more" : "Muat lagi")}
+            </button>
+          </div>
+        ) : <p>{locale === "en" ? "All portfolios loaded." : "Semua portofolio sudah dimuat."}</p>}
       </footer>
 
       {hasMore ? <div ref={triggerRef} className="h-10" /> : null}

@@ -11,6 +11,12 @@ export async function GET(request: Request) {
   const query = incomingUrl.searchParams.toString();
   const target = `${getAdminPublicApiBase()}/portfolios${query ? `?${query}` : ""}`;
 
+  const targetUrl = new URL(target);
+  if (targetUrl.origin === incomingUrl.origin && targetUrl.pathname === incomingUrl.pathname) {
+    console.error("Portfolios API proxy points to itself; configure FRIMECRAFT_ADMIN_PUBLIC_API_BASE");
+    return NextResponse.json({ success: false, message: "Portfolios API is not configured" }, { status: 502 });
+  }
+
   try {
     const response = await fetch(target, {
       headers: { Accept: "application/json" },
@@ -22,15 +28,14 @@ export async function GET(request: Request) {
       status: response.status,
       headers: { "content-type": response.headers.get("content-type") || "application/json" },
     });
-  } catch {
+  } catch (error) {
+    console.error("Failed to proxy portfolios endpoint", error);
     return NextResponse.json(
       {
         success: false,
         message: "Failed to proxy portfolios endpoint",
-        data: [],
-        pagination: { page: 1, pageSize: 12, total: 0, totalPages: 1 },
       },
-      { status: 200 },
+      { status: 502 },
     );
   }
 }
