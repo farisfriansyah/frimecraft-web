@@ -81,7 +81,7 @@ export default async function Home() {
         { title: "UI/UX Designer", description: "Product flows designed through real problem-solving and user behavior patterns." },
         { title: "Frontend Developer", description: "Production-grade frontend architecture with reusable components and fast delivery." },
         { title: "Backend Developer", description: "Structured API and data models that remain maintainable as product scope grows." },
-        { title: "Web3 & NFT", description: "Smart-contract and Web3 product collaboration for experimental and emerging ideas." },
+        { title: "Design Systems & Prototyping", description: "Reusable component libraries and interactive prototypes that keep product interfaces consistent from concept to developer handoff." },
         { title: "Other Explorations", description: "Constantly exploring new stacks and workflows to solve unfamiliar problems quickly." },
       ]
     : [
@@ -89,7 +89,7 @@ export default async function Home() {
         { title: "Desainer UI/UX", description: "Alur produk yang dirancang lewat pemecahan masalah nyata dan pola perilaku pengguna." },
         { title: "Frontend Developer", description: "Arsitektur frontend siap produksi dengan komponen reusable dan eksekusi cepat." },
         { title: "Backend Developer", description: "Struktur API dan model data yang tetap mudah dirawat saat cakupan produk berkembang." },
-        { title: "Web3 & NFT", description: "Kolaborasi produk Web3 dan smart contract untuk ide eksperimental dan emerging." },
+        { title: "Sistem Desain & Prototipe", description: "Sistem komponen yang konsisten dan prototipe interaktif untuk memvalidasi desain hingga proses handoff ke developer." },
         { title: "Eksplorasi Lainnya", description: "Terus mengeksplorasi stack dan workflow baru untuk menyelesaikan masalah yang belum familiar." },
       ];
 
@@ -150,7 +150,7 @@ export default async function Home() {
           }}
         />
       ) : null}
-      <HeroSection siteDescription={settings?.siteDescription || null} dictionary={dictionary} locale={locale} />
+      <HeroSection dictionary={dictionary} locale={locale} />
       <AboutSection dictionary={dictionary} />
       <ServicesSection services={services} dictionary={dictionary} />
       <ProfileSection

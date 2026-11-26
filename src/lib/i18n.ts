@@ -35,9 +35,16 @@ export type AppDictionary = {
     poweredBy: string;
   };
   homePage: {
-    heroFallback: string;
+    heroBadge: string;
+    heroTitleLead: string;
+    heroTitleAccent: string;
+    heroDescription: string;
     seeMyPortfolios: string;
-    downloadProposal: string;
+    contactAction: string;
+    whatsappAction: string;
+    whatsappPrefill: string;
+    upworkAction: string;
+    fiverrAction: string;
     aboutTitle: string;
     aboutBodyOne: string;
     aboutBodyTwo: string;
@@ -139,24 +146,31 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
       poweredBy: "Dibuat dengan ❤️ oleh Frime Craft Studio",
     },
     homePage: {
-      heroFallback: "Merancang, membangun, dan menyelesaikan masalah dengan ide kreatif di berbagai jenis proyek.",
-      seeMyPortfolios: "Lihat portofolio saya",
-      downloadProposal: "Unduh proposal",
-      aboutTitle: "Apa itu Frime Craft Studio?",
-      aboutBodyOne: "Website ini adalah pusat portofolio yang memuat proyek-proyek di NFT, SaaS, e-learning, CRM, pemerintahan, dan produk pendidikan. Fokusnya adalah eksekusi yang praktis: belajar cepat, menyelesaikan batasan, dan mengirim hasil berkualitas.",
-      aboutBodyTwo: "Craft ini menggabungkan keputusan desain, riset UX, dan implementasi frontend/backend. Misinya adalah membangun antarmuka yang modern, intuitif, dan tetap mudah dirawat dalam operasi produk nyata.",
+      heroBadge: "Studio digital · desain & pengembangan",
+      heroTitleLead: "Ubah ide menjadi",
+      heroTitleAccent: "produk digital yang siap digunakan.",
+      heroDescription: "Saya merancang UI/UX dan membangun website serta produk digital. Jelajahi karya pilihan, lalu hubungi saya untuk membahas proyek Anda.",
+      seeMyPortfolios: "Lihat portofolio",
+      contactAction: "Diskusikan proyek",
+      whatsappAction: "Diskusikan via WhatsApp",
+      whatsappPrefill: "Halo, saya ingin berdiskusi tentang proyek saya.",
+      upworkAction: "Hubungi saya di Upwork",
+      fiverrAction: "Lihat layanan di Fiverr",
+      aboutTitle: "Dari ide menjadi produk digital",
+      aboutBodyOne: "Saya menggabungkan desain, teknologi, dan pemecahan masalah untuk membangun pengalaman digital yang mudah dipahami dan digunakan.",
+      aboutBodyTwo: "Portofolio ini menampilkan karya di berbagai bidang, termasuk SaaS, e-learning, CRM, Web3, dan website—serta proses desain dan pengembangan di baliknya.",
       servicesTitle: "Yang Bisa Saya Bantu Bangun",
       profileTitle: "Tentang Saya dan Ringkasan Profesional",
       profileAction: "Buka halaman profil lengkap",
       latestUpdate: "Update Terbaru",
       latestArticlesTitle: "Terbaru dari Jurnal",
       featuredPortfoliosTitle: "Portofolio Unggulan",
-      featuredPortfoliosDescription: "Berikut adalah karya pilihan yang dipublikasikan dari Frimecraft Admin.",
-      hireTitle: "Ajak saya berkolaborasi",
-      hireDescription: "Terbuka untuk kolaborasi di product design, frontend architecture, dan fullstack execution.",
-      noFeaturedPortfolio: "Belum ada portofolio featured. Tandai portofolio sebagai featured di admin untuk menampilkan di sini.",
-      noPublishedArticles: "Belum ada artikel publish. Setelah Anda publish artikel dari admin, daftar di sini akan otomatis muncul.",
-      profileUnavailable: "Profil publik belum tersedia. Pastikan data experience, education, certification, dan skills sudah terisi di admin.",
+      featuredPortfoliosDescription: "Jelajahi proyek pilihan dari berbagai bidang dan lihat bagaimana desain serta pengembangan diterapkan di tiap proyek.",
+      hireTitle: "Punya proyek yang ingin Anda wujudkan?",
+      hireDescription: "Ceritakan tujuan dan kebutuhan proyek Anda. Kita bisa mulai dengan percakapan singkat untuk melihat bagaimana saya dapat membantu.",
+      noFeaturedPortfolio: "Karya pilihan akan segera hadir. Sementara itu, jelajahi semua portofolio.",
+      noPublishedArticles: "Artikel baru akan hadir di sini.",
+      profileUnavailable: "Ringkasan profil sedang diperbarui.",
       jobExperiences: "Pengalaman Kerja",
       educations: "Pendidikan",
       certificates: "Sertifikat",
@@ -241,24 +255,31 @@ const dictionaries: Record<AppLocale, AppDictionary> = {
       poweredBy: "Made with ❤️ by Frime Craft Studio",
     },
     homePage: {
-      heroFallback: "Designing, crafting, and solving problems with creative ideas across various project types.",
-      seeMyPortfolios: "See My Portfolios",
-      downloadProposal: "Download Proposal",
-      aboutTitle: "What is Frime Craft Studio?",
-      aboutBodyOne: "This website is a portfolio hub containing projects delivered across NFT, SaaS, e-learning, CRM, government, and education products. The focus is practical execution: learn fast, solve constraints, and ship with quality.",
-      aboutBodyTwo: "The craft combines design decisions, UX research, and frontend/backend implementation. The mission is to build interfaces that look modern, feel intuitive, and stay maintainable in real product operations.",
+      heroBadge: "Digital studio · design & development",
+      heroTitleLead: "Turn ideas into",
+      heroTitleAccent: "digital products people can use.",
+      heroDescription: "I design user experiences and build websites and digital products. Explore selected work, then get in touch to discuss your project.",
+      seeMyPortfolios: "Explore portfolio",
+      contactAction: "Discuss a project",
+      whatsappAction: "Discuss via WhatsApp",
+      whatsappPrefill: "Hi, I'd like to discuss a project.",
+      upworkAction: "Contact me on Upwork",
+      fiverrAction: "View services on Fiverr",
+      aboutTitle: "From ideas to digital products",
+      aboutBodyOne: "I bring design, technology, and problem-solving together to build digital experiences that are clear and easy to use.",
+      aboutBodyTwo: "This portfolio features work across SaaS, e-learning, CRM, Web3, and websites—along with the design and development behind each project.",
       servicesTitle: "What I Can Help You Build",
       profileTitle: "About Me and Professional Snapshot",
       profileAction: "Open full profile page",
       latestUpdate: "Latest Update",
       latestArticlesTitle: "Fresh From Journal",
       featuredPortfoliosTitle: "Featured Portfolios",
-      featuredPortfoliosDescription: "Here are selected project works published from Frimecraft Admin.",
-      hireTitle: "Hire me to collaborate",
-      hireDescription: "Open for collaboration on product design, frontend architecture, and fullstack execution.",
-      noFeaturedPortfolio: "No featured portfolios yet. Mark a portfolio as featured in admin to show it here.",
-      noPublishedArticles: "No published articles yet. Once you publish articles from admin, the list will appear here automatically.",
-      profileUnavailable: "Public profile is not available yet. Make sure experience, education, certification, and skills data are filled in admin.",
+      featuredPortfoliosDescription: "Explore selected projects across industries and see how design and development come together in each one.",
+      hireTitle: "Have a project you'd like to bring to life?",
+      hireDescription: "Tell me about your goals and project needs. We can start with a short conversation to see how I can help.",
+      noFeaturedPortfolio: "Selected work is coming soon. In the meantime, explore all portfolios.",
+      noPublishedArticles: "New articles will appear here soon.",
+      profileUnavailable: "The professional profile is being updated.",
       jobExperiences: "Job Experiences",
       educations: "Educations",
       certificates: "Certificates",

@@ -22,8 +22,8 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
     { href: `${withLocalePath(locale, "/")}#rl-profile`, label: dictionary.common.profile },
     { href: withLocalePath(locale, "/portfolios"), label: dictionary.common.portfolio },
     { href: withLocalePath(locale, "/articles"), label: dictionary.common.articles },
-    { href: `${withLocalePath(locale, "/")}#rl-hireme`, label: dictionary.common.hireMe },
   ];
+  const contactHref = `${withLocalePath(locale, "/")}#rl-hireme`;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -76,6 +76,12 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
                 </Link>
               ))}
             </nav>
+            <Link
+              href={contactHref}
+              className="inline-flex shrink-0 items-center justify-center rounded-lg border border-[color:var(--accent)] bg-[color:var(--accent)] px-3 py-2 text-[12px] font-semibold text-white transition-colors hover:border-[color:var(--accent-strong)] hover:bg-[color:var(--accent-strong)]"
+            >
+              {dictionary.common.hireMe}
+            </Link>
             <div><p className="text-[color:var(--muted)]">|</p></div>
             <LocaleSwitcher
               locale={locale}
@@ -126,6 +132,13 @@ export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href={contactHref}
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-xl bg-[color:var(--accent)] px-3 py-3 text-center font-semibold text-white hover:bg-[color:var(--accent-strong)]"
+            >
+              {dictionary.homePage.contactAction}
+            </Link>
           </nav>
           <div className="border-t border-[color:var(--line)] px-4 py-4">
             <LocaleSwitcher
