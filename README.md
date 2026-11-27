@@ -21,8 +21,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Required Environment
 
 - FRIMECRAFT_ADMIN_PUBLIC_API_BASE
-	- Example: http://localhost:3000/api/public
+	- Example: http://localhost:3001/frime-admin/api/public
 	- Point this to frimecraft-admin, not this frontend's own API route. If both run locally, use different ports.
+	- Portfolio images are served through this web app's `/api/public/portfolio-images` route, which fetches the validated image endpoint from frimecraft-admin.
 
 ## Current Implemented Foundation
 

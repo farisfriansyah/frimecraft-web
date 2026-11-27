@@ -6,6 +6,7 @@ import type { Pagination, PublicPortfolio } from "@/types/public-api";
 import { useInfiniteAutoLoad } from "@/hooks/use-infinite-auto-load";
 import { getDictionary } from "@/lib/i18n";
 import { fetchPortfolios } from "@/lib/portfolio-client";
+import { deduplicatePortfolios } from "@/lib/portfolio-dedupe";
 
 type InfinitePortfoliosGridProps = {
   initialItems: PublicPortfolio[];
@@ -53,7 +54,7 @@ export function InfinitePortfoliosGrid({
   locale,
 }: InfinitePortfoliosGridProps) {
   const dictionary = getDictionary(locale || "id");
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState(() => deduplicatePortfolios(initialItems));
   const [pagination, setPagination] = useState(initialPagination);
   const [loadError, setLoadError] = useState(false);
   const { page, setPage, isLoading, setIsLoading, hasMore, triggerRef } = useInfiniteAutoLoad(
@@ -79,7 +80,7 @@ export function InfinitePortfoliosGrid({
           controller.signal,
         );
         if (controller.signal.aborted) return;
-        setItems((prev) => [...prev, ...result.items]);
+        setItems((prev) => deduplicatePortfolios([...prev, ...result.items]));
         setPagination(result.pagination);
         setPage(nextPage);
       } catch (error) {

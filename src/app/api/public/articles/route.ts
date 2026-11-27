@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const DEFAULT_PUBLIC_API_BASE = "http://localhost:3000/api/public";
+const DEFAULT_PUBLIC_API_BASE = "http://localhost:3000/frime-admin/api/public";
 
 function getAdminPublicApiBase() {
   return (process.env.FRIMECRAFT_ADMIN_PUBLIC_API_BASE || DEFAULT_PUBLIC_API_BASE).replace(/\/$/, "");

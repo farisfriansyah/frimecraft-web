@@ -1,4 +1,5 @@
 import type { Pagination, PublicPortfolio } from "@/types/public-api";
+import { deduplicatePortfolios } from "@/lib/portfolio-dedupe";
 
 type PortfoliosPayload = {
   success?: boolean;
@@ -31,10 +32,10 @@ export async function fetchPortfolios(
   }
 
   return {
-    items: payload.data.map((item) => ({
+    items: deduplicatePortfolios(payload.data.map((item) => ({
       ...item,
       imageUrl: item.imageUrl ? new URL(item.imageUrl, window.location.origin).href : null,
-    })),
+    }))),
     pagination: payload.pagination,
   };
 }

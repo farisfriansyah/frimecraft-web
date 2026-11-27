@@ -7,17 +7,52 @@ import type {
   PublicPortfolioDetail,
   PublicPortfolio,
 } from "@/types/public-api";
+import { deduplicatePortfolios } from "@/lib/portfolio-dedupe";
 
-const DEFAULT_PUBLIC_API_BASE = "http://localhost:3000/api/public";
+const DEFAULT_PUBLIC_API_BASE = "http://localhost:3000/frime-admin/api/public";
 
 export function getPublicApiBaseUrl() {
   return (process.env.FRIMECRAFT_ADMIN_PUBLIC_API_BASE || DEFAULT_PUBLIC_API_BASE).replace(/\/$/, "");
 }
 
-function normalizeImageUrl(value: string | null): string | null {
+function getPortfolioImageProxyPath(filename: string) {
+  if (!filename || filename === "." || filename === ".." || /[\\/]/.test(filename)) return null;
+
+  return `/api/public/portfolio-images?filename=${encodeURIComponent(filename)}`;
+}
+
+export function normalizeImageUrl(value: string | null): string | null {
   if (!value) return null;
-  if (value.startsWith("http://") || value.startsWith("https://")) return value;
-  return `${getPublicApiBaseUrl().replace(/\/api\/public$/, "")}${value.startsWith("/") ? value : `/${value}`}`;
+
+  const isHttpUrl = /^https?:\/\//i.test(value);
+  if (!isHttpUrl && /^[a-z][a-z\d+.-]*:/i.test(value)) return null;
+  if (value.startsWith("//")) return null;
+
+  let parsedUrl: URL;
+  try {
+    parsedUrl = isHttpUrl
+      ? new URL(value)
+      : new URL(value.startsWith("/") ? value.slice(1) : value, `${getPublicApiBaseUrl().replace(/\/api\/public$/, "")}/`);
+  } catch {
+    return null;
+  }
+
+  const uploadPrefix = "/uploads/portfolio/";
+  const uploadIndex = parsedUrl.pathname.lastIndexOf(uploadPrefix);
+  if (uploadIndex !== -1) {
+    return getPortfolioImageProxyPath(parsedUrl.pathname.slice(uploadIndex + uploadPrefix.length));
+  }
+
+  if (
+    parsedUrl.pathname.endsWith("/api/portfolio-images") ||
+    parsedUrl.pathname.endsWith("/api/public/portfolio-images")
+  ) {
+    return getPortfolioImageProxyPath(parsedUrl.searchParams.get("filename") || "");
+  }
+
+  return isHttpUrl
+    ? value
+    : new URL(parsedUrl.pathname + parsedUrl.search + parsedUrl.hash, `${getPublicApiBaseUrl().replace(/\/api\/public$/, "")}/`).toString();
 }
 
 async function requestJson<T>(path: string, _revalidateSeconds?: number): Promise<T> {
@@ -166,10 +201,10 @@ export async function getPublicPortfoliosWithFilters(options?: {
   }
 
   return {
-    items: payload.data.map((item) => ({
+    items: deduplicatePortfolios(payload.data.map((item) => ({
       ...item,
       imageUrl: normalizeImageUrl(item.imageUrl),
-    })),
+    }))),
     pagination: payload.pagination,
   };
 }
@@ -215,5 +250,5 @@ export async function getAllPublicPortfoliosForSitemap(): Promise<PublicPortfoli
     page += 1;
   } while (page <= totalPages);
 
-  return items;
+  return deduplicatePortfolios(items);
 }

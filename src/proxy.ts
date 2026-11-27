@@ -62,6 +62,11 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const forwardedLocale = request.headers.get(LOCALE_HEADER_NAME);
+  if (SUPPORTED_LOCALES.some((locale) => locale === forwardedLocale)) {
+    return NextResponse.next();
+  }
+
   const segments = pathname.split("/").filter(Boolean);
   const maybeLocale = segments[0]?.toLowerCase();
   const urlLang = request.nextUrl.searchParams.get("lang");

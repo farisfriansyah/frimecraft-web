@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import type { PublicPortfolio } from "@/types/public-api";
+import { normalizeImageUrl } from "@/lib/public-api";
+import { deduplicatePortfolios } from "@/lib/portfolio-dedupe";
 
-const DEFAULT_PUBLIC_API_BASE = "http://localhost:3000/api/public";
+const DEFAULT_PUBLIC_API_BASE = "http://localhost:3000/frime-admin/api/public";
 
 function getAdminPublicApiBase() {
   return (process.env.FRIMECRAFT_ADMIN_PUBLIC_API_BASE || DEFAULT_PUBLIC_API_BASE).replace(/\/$/, "");
@@ -24,10 +27,37 @@ export async function GET(request: Request) {
     });
 
     const text = await response.text();
-    return new NextResponse(text, {
-      status: response.status,
-      headers: { "content-type": response.headers.get("content-type") || "application/json" },
-    });
+    if (!response.ok) {
+      return new NextResponse(text, {
+        status: response.status,
+        headers: { "content-type": response.headers.get("content-type") || "application/json" },
+      });
+    }
+
+    let payload: { data?: PublicPortfolio[]; [key: string]: unknown };
+    try {
+      payload = JSON.parse(text) as { data?: PublicPortfolio[]; [key: string]: unknown };
+    } catch {
+      return new NextResponse(text, {
+        status: response.status,
+        headers: { "content-type": response.headers.get("content-type") || "application/json" },
+      });
+    }
+
+    if (!Array.isArray(payload.data)) {
+      return NextResponse.json(payload, { status: response.status });
+    }
+
+    return NextResponse.json(
+      {
+        ...payload,
+        data: deduplicatePortfolios(payload.data.map((portfolio) => ({
+          ...portfolio,
+          imageUrl: normalizeImageUrl(portfolio.imageUrl),
+        }))),
+      },
+      { status: response.status },
+    );
   } catch (error) {
     console.error("Failed to proxy portfolios endpoint", error);
     return NextResponse.json(
